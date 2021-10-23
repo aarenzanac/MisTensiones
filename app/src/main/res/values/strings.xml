@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mis Tensiones</string>
+    <string name="logologin">LogoLogin</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="reg_strese">Regístrese</string>
+    <string name="no_tiene_cuenta">¿No tiene cuenta?</string>
+</resources>

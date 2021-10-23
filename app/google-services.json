@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "958326961867",
+    "project_id": "mistensiones",
+    "storage_bucket": "mistensiones.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958326961867:android:ed0722ef616b6f3f03cd4e",
+        "android_client_info": {
+          "package_name": "com.alexac.mistensiones"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958326961867-1e05bbkfi7ep0ifk8sp1iijnuuuj5nfc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA79iDOr0D3SlWdSUuM81yogQpz9G-pnbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958326961867-1e05bbkfi7ep0ifk8sp1iijnuuuj5nfc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
