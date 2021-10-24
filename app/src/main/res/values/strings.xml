@@ -7,4 +7,17 @@
     <string name="no_tiene_cuenta">¿No tiene cuenta?</string>
     <string name="logoapp">logoApp</string>
     <string name="acceder">Acceder</string>
+    <string name="datos_iniciales">DATOS INICIALES</string>
+    <string name="ok">OK</string>
+    <string name="titulo">titulo</string>
+    <string name="nombre">Nombre</string>
+    <string name="altura_cm">Altura (cm.)</string>
+    <string name="edad">Edad</string>
+    <string name="mujer">Mujer</string>
+    <string name="hombre">Hombre</string>
+    <string name="pantalla_de_registro">PANTALLA DE REGISTRO</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="titulo1">titulo</string>
+    <string name="e_mail1">E-Mail</string>
+    <string name="inicio">INICIO</string>
 </resources>
