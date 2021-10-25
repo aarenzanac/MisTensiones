@@ -22,14 +22,16 @@ class PrincipalActivity : AppCompatActivity() {
         val email = bundle?.getString("email")
 
         if (email != null) {
+            database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
+                textViewNombreLogueado.setText(it.get("nombre") as String?)
+            }
             setup(email)
         }
+
     }
 
     private fun setup(email: String){
-        database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
-            textViewNombreLogueado.setText(it.get("nombre") as String?)
-        }
+
         buttonSalir.setOnClickListener {
             val pantallaPrincipalIntent = Intent(this, LoginActivity::class.java).apply {}
             FirebaseAuth.getInstance().signOut()
