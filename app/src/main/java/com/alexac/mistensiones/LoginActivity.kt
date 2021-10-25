@@ -52,7 +52,6 @@ class LoginActivity : AppCompatActivity() {
     private fun goPrincipalActivity(email: String, password: String){
         val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
             putExtra("email", email)
-            putExtra("password", password)
         }
 
         startActivity(pantallaPrincipalIntent)

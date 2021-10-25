@@ -20,4 +20,5 @@
     <string name="titulo1">titulo</string>
     <string name="e_mail1">E-Mail</string>
     <string name="inicio">INICIO</string>
+    <string name="salir">Salir</string>
 </resources>
