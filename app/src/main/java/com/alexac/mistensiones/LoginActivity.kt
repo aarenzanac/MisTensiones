@@ -39,17 +39,14 @@ class LoginActivity : AppCompatActivity() {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(edit_text_email.text.toString(), edit_text_password.text.toString()).addOnCompleteListener{
 
                     if(it.isSuccessful){
-                        Toast.makeText(this, "REGISTRO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "ACCESO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
                         goPrincipalActivity(edit_text_email.text.toString(), edit_text_password.text.toString())
                     }else{
-
-                        mostrarError()
+                        mostrarError(it.exception.toString())
                     }
                 }
-
             }
         }
-
     }
 
     private fun goPrincipalActivity(email: String, password: String){
@@ -61,8 +58,21 @@ class LoginActivity : AppCompatActivity() {
         startActivity(pantallaPrincipalIntent)
     }
 
-    private fun mostrarError(){
-        Toast.makeText(this, "ERROR AL HACER LOGIN, REVISE LOS DATOS", Toast.LENGTH_SHORT).show()
+    private fun mostrarError(exception: String){
+        when(exception) {
+            "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted." ->
+                Toast.makeText(this, "Correo electrónico incorrecto, Reviselo, por favor.",Toast.LENGTH_SHORT).show()
+            "com.google.firebase.auth.FirebaseAuthUserCollisionException: The email address is already in use by another account." ->
+                Toast.makeText(this, "El usuario introducido ya está registrado.", Toast.LENGTH_SHORT).show()
+            "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The password is invalid or the user does not have a password." ->
+                Toast.makeText(this, "Contraseña incorrecta.",Toast.LENGTH_SHORT).show()
+            "com.google.firebase.auth.FirebaseAuthInvalidUserException: There is no user record corresponding to this identifier. The user may have been deleted." ->
+                Toast.makeText(this, "Usuario no registrado.",Toast.LENGTH_SHORT).show()
+            "com.google.firebase.FirebaseTooManyRequestsException: We have blocked all requests from this device due to unusual activity. Try again later. [ Access to this account has been temporarily " +
+                    "disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. ]" ->
+                Toast.makeText(this, "Usuario bloqueado. Contacte con el administrador.",Toast.LENGTH_SHORT).show()
+        }
+        //Toast.makeText(this, exception, Toast.LENGTH_SHORT).show()
     }
 
 }

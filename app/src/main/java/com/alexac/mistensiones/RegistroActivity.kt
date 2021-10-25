@@ -26,11 +26,9 @@ class RegistroActivity : AppCompatActivity() {
                         Toast.makeText(this, "REGISTRO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
                         goDatosInicioActivity(edit_text_email_registro.text.toString(), edit_text_password_registro.text.toString())
                     }else{
-
-                        mostrarError()
+                        mostrarError(it.exception.toString())
                     }
                 }
-
             }
         }
 
@@ -45,8 +43,15 @@ class RegistroActivity : AppCompatActivity() {
         startActivity(datosInicioIntent)
     }
 
-    private fun mostrarError(){
-        Toast.makeText(this, "ERROR EN EL REGISTRO, REVISE LOS DATOS", Toast.LENGTH_SHORT).show()
+    private fun mostrarError(exception: String){
+        when(exception) {
+            "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted." ->
+            Toast.makeText(this, "Correo electrónico incorrecto, Reviselo, por favor.",Toast.LENGTH_SHORT).show()
+            "com.google.firebase.auth.FirebaseAuthUserCollisionException: The email address is already in use by another account." ->
+            Toast.makeText(this, "El usuario introducido ya está registrado.", Toast.LENGTH_SHORT).show()
+            "com.google.firebase.auth.FirebaseAuthWeakPasswordException: The given password is invalid. [ Password should be at least 6 characters ]" ->
+            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres.", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
