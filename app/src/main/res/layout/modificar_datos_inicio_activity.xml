@@ -52,7 +52,7 @@
             android:layout_marginTop="20dp"
             android:autofillHints=""
             android:ems="10"
-            android:editable="false"
+            android:focusable="false"
             android:gravity="center_vertical"
             android:hint="@string/nombre"
             android:inputType="none"
