@@ -17,7 +17,7 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     private fun setup(){
-        button_registrarse.setOnClickListener {
+        button_modificar_datos.setOnClickListener {
             if (edit_text_email_registro.text.isNotEmpty() && edit_text_password_registro.text.isNotEmpty()){
 
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(edit_text_email_registro.text.toString(), edit_text_password_registro.text.toString()).addOnCompleteListener{

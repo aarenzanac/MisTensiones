@@ -5,8 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.datos_inicio_activity.*
 import kotlinx.android.synthetic.main.prinpipal_activity.*
 
 class PrincipalActivity : AppCompatActivity() {
@@ -32,7 +30,13 @@ class PrincipalActivity : AppCompatActivity() {
 
     private fun setup(email: String){
 
-        buttonSalir.setOnClickListener {
+        imageButtonModificarDatosInicio.setOnClickListener {
+            val pantallaModificarDatosIntent = Intent(this, ModificarDatosInicioActivity::class.java).apply {
+                putExtra("email", email) }
+            startActivity(pantallaModificarDatosIntent)
+        }
+
+        imageButtonSalir.setOnClickListener {
             val pantallaPrincipalIntent = Intent(this, LoginActivity::class.java).apply {}
             FirebaseAuth.getInstance().signOut()
             startActivity(pantallaPrincipalIntent)

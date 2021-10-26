@@ -8,7 +8,9 @@
     <string name="logoapp">logoApp</string>
     <string name="acceder">Acceder</string>
     <string name="datos_iniciales">DATOS INICIALES</string>
+    <string name="modificar_datos_iniciales">MODIFICACIÓN DE DATOS INICIALES</string>
     <string name="continuar">CONTINUAR</string>
+    <string name="modificar_datos">MODIFICAR DATOS</string>
     <string name="titulo">titulo</string>
     <string name="nombre">Nombre</string>
     <string name="altura_cm">Altura (cm.)</string>
@@ -21,4 +23,11 @@
     <string name="e_mail1">E-Mail</string>
     <string name="inicio">INICIO</string>
     <string name="salir">Salir</string>
+    <string name="salir1">Salir</string>
+    <string name="nombrelogueado">NombreLogueado</string>
+    <string name="imagen_a_adir_registro">Imagen Añadir Registro</string>
+    <string name="imagen_buscar_registro">Imagen Buscar Registro</string>
+    <string name="imagen_modificar_registro">Imagen Modificar Registro</string>
+    <string name="imagen_modificar_datos_inicio">Imagen modificar Datos Inicio</string>
+    <string name="email_registrado">Email Registrado</string>
 </resources>

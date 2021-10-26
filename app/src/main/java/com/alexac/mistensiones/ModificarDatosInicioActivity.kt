@@ -7,14 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.datos_inicio_activity.*
 
-class DatosInicioActivity : AppCompatActivity() {
+class ModificarDatosInicioActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.datos_inicio_activity)
+        setContentView(R.layout.modificar_datos_inicio_activity)
 
         val bundle = intent.extras
         val email = bundle?.getString("email")
@@ -26,41 +26,44 @@ class DatosInicioActivity : AppCompatActivity() {
     }
 
     private fun setup(email: String) {
+        val sexo = ""
+        database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
+            edit_text_nombre.setText(it.get("nombre") as String?)}
+        database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
+            if(it.get("sexo") == ("Hombre")){
+                radio_button_hombre.isChecked = true
+            }else{
+                radio_button_mujer.isChecked = true
+            }
+        }
+
 
         button_modificar_datos.setOnClickListener {
-            if (edit_text_nombre.text.isNotEmpty()){
-                if(edit_text_edad.text.isNotEmpty() && edit_text_edad.text.toString().toInt() >= 18 && edit_text_edad.text.toString().toInt() <= 100){
-                    if(edit_text_altura.text.isNotEmpty() && edit_text_altura.text.toString().toInt() >= 50 && edit_text_altura.text.toString().toInt() <= 250){
-                        if(radio_button_hombre.isChecked || radio_button_mujer.isChecked){
-                            var sexo = ""
-                            if(radio_button_hombre.isChecked){
-                                sexo = "Hombre"
-                            }else{
-                                sexo = "Mujer"
-                            }
-                            database.collection("usuariosRegistrados").document(email).set(
-                                    hashMapOf("email" to email,
+            if(edit_text_edad.text.isNotEmpty() && edit_text_edad.text.toString().toInt() >= 18 && edit_text_edad.text.toString().toInt() <= 100){
+                if(edit_text_altura.text.isNotEmpty() && edit_text_altura.text.toString().toInt() >= 50 && edit_text_altura.text.toString().toInt() <= 250){
+                    var sexo = ""
+                    if(radio_button_hombre.isChecked){
+                        sexo = "Hombre"
+                    }else{
+                        sexo = "Mujer"
+                    }
+                    database.collection("usuariosRegistrados").document(email).set(
+                            hashMapOf("email" to email,
                                     "nombre" to edit_text_nombre.text.toString(),
                                     "edad" to edit_text_edad.text.toString().toInt(),
                                     "altura" to edit_text_altura.text.toString().toInt(),
                                     "sexo" to sexo
-                                    )
                             )
-                            //goPrincipalActivity(email, edit_text_nombre.text.toString(), edit_text_edad.text.toString().toInt(), edit_text_altura.text.toString().toInt())
-                            goPrincipalActivity(email)
-                        }else{
-                            Toast.makeText(this, "SELECCIONE UN GÉNERO, POR FAVOR.", Toast.LENGTH_SHORT).show()
+                    )
+                    goPrincipalActivity(email)
 
-                        }
-                    }else{
-                        Toast.makeText(this, "LA ALTURA DEBE ESTAR COMPRENDIDA ENTRE 50 Y 250 CM. REVISELA POR FAVOR.", Toast.LENGTH_SHORT).show()
-                    }
                 }else{
-                    Toast.makeText(this, "LA EDAD DEBE ESTAR COMPRENDIDA ENTRE 18 Y 100 AÑOS. REVISELA, POR FAVOR.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "LA ALTURA DEBE ESTAR COMPRENDIDA ENTRE 50 Y 250 CM. REVISELA POR FAVOR.", Toast.LENGTH_SHORT).show()
                 }
             }else{
-                Toast.makeText(this, "DEBE INTRODUCIR UN NOMBRE, POR FAVOR.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "LA EDAD DEBE ESTAR COMPRENDIDA ENTRE 18 Y 100 AÑOS. REVISELA, POR FAVOR.", Toast.LENGTH_SHORT).show()
             }
+
         }
 
     }

@@ -22,7 +22,6 @@
             android:layout_width="269dp"
             android:layout_height="53dp"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
             android:contentDescription="@string/titulo"
             app:srcCompat="@mipmap/titulo" />
 
@@ -30,28 +29,89 @@
             android:id="@+id/text_view_inicio"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal|center_vertical"
             android:text="@string/inicio"
             android:textAlignment="center"
             android:textColor="#350D0D"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textViewNombreLogueado"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="37dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="NombreLogueado"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_inicio" />
+            android:layout_height="45dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/buttonSalir"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textViewNombreLogueado"
+                android:layout_width="281dp"
+                android:layout_height="37dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/nombrelogueado"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_inicio" />
+
+            <ImageButton
+                android:id="@+id/imageButtonModificarDatosInicio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_modificar_datos_inicio"
+                android:foregroundGravity="center_vertical|center"
+                app:srcCompat="@mipmap/ic_account_edit_outline_grey600_18dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEntradaDatos"
+            android:layout_width="match_parent"
+            android:layout_height="445dp"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/salir" />
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_a_adir_registro"
+                app:srcCompat="@mipmap/ic_text_box_plus_outline_grey600_48dp" />
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_modificar_registro"
+                app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonSalir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/salir"
+                app:srcCompat="@mipmap/ic_exit_run_grey600_48dp" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_buscar_registro"
+                app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
