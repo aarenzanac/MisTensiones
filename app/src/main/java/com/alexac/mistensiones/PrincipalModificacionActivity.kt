@@ -21,14 +21,14 @@ class PrincipalModificacionActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_modificacion_activity)
-        editTextDate.setInputType(InputType.TYPE_NULL);
+        editTextDateModificacion.setInputType(InputType.TYPE_NULL);
 
         val bundle = intent.extras
         val email = bundle?.getString("email")
 
         if (email != null) {
             database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
-                textViewNombreLogueado.setText(it.get("nombre") as String?)
+                textViewNombreLogueadoPantallaModificacion.setText(it.get("nombre") as String?)
             }
             setup(email)
         }
@@ -37,7 +37,7 @@ class PrincipalModificacionActivity : AppCompatActivity() {
 
     private fun setup(email: String){
 
-        editTextDate.setOnClickListener {
+        editTextDateModificacion.setOnClickListener {
             val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
             datePicker.show(supportFragmentManager, "datePicker")
         }

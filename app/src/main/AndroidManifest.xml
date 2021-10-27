@@ -33,6 +33,9 @@
         <activity android:name=".PrincipalActivity"
             android:theme="@style/SplashScreen">
         </activity>
+        <activity android:name=".PrincipalModificacionActivity"
+            android:theme="@style/SplashScreen">
+        </activity>
     </application>
 
 </manifest>

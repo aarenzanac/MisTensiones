@@ -61,7 +61,10 @@ class PrincipalActivity : AppCompatActivity() {
         }
 
         imageButtonModificar.setOnClickListener {
-            val pantallaModificacionRegistrosIntent = Intent(this, modificarPrincipalActivity::class.java).apply {}
+            val pantallaModificacionRegistrosIntent = Intent(this, PrincipalModificacionActivity::class.java).apply {
+                putExtra("email", email)
+            }
+            startActivity(pantallaModificacionRegistrosIntent)
         }
 
         imageButtonSalir.setOnClickListener {
@@ -96,7 +99,7 @@ class PrincipalActivity : AppCompatActivity() {
             limpiarCampos()
 
         }else{
-            Toast.makeText(this, "LA EDAD DEBE ESTAR COMPRENDIDA ENTRE 18 Y 100 AÑOS. REVISELA, POR FAVOR.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "COMPLETE LOS DATOS, POR FAVOR.", Toast.LENGTH_SHORT).show()
         }
     }
 
