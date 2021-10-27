@@ -8,6 +8,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.registro_activity.*
 
 class RegistroActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)

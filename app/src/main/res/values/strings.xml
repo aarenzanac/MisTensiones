@@ -32,10 +32,16 @@
     <string name="email_registrado">Email Registrado</string>
     <string name="fecha">Fecha</string>
     <string name="hora">Hora</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sist_lica_mmhg">Sistólica mmHg</string>
     <string name="diast_lica_mmhg">Diastólica mmHg</string>
     <string name="oxigenacion">Oxigenacion %</string>
     <string name="peso_kg">Peso Kg</string>
+    <string name="editar_registros">EDITAR/ELIMINAR REGISTROS</string>
+    <string name="textview">TextView</string>
+    <string name="todo">TODO</string>
+    <string name="seleccione_fecha">Seleccione fecha:</string>
+    <string name="boton_eliminar">boton_eliminar</string>
+    <string name="string_boton_eliminar" />
+    <string name="botonvolver">botonVolver</string>
 </resources>

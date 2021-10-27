@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.datos_inicio_activity.*
 class DatosInicioActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
+    val fechaActual = System.currentTimeMillis()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -45,6 +46,15 @@ class DatosInicioActivity : AppCompatActivity() {
                                     "altura" to edit_text_altura.text.toString().toInt(),
                                     "sexo" to sexo
                                     )
+                            )
+                            database.collection(email).document(fechaActual.toString()).set(
+                                    hashMapOf("fecha" to "",
+                                    "hora" to "",
+                                    "sistolica" to "",
+                                    "diastolica" to "",
+                                    "oxigenacion" to "",
+                                    "peso" to ""
+                                )
                             )
                             //goPrincipalActivity(email, edit_text_nombre.text.toString(), edit_text_edad.text.toString().toInt(), edit_text_altura.text.toString().toInt())
                             goPrincipalActivity(email)

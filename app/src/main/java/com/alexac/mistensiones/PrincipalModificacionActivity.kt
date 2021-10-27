@@ -1,11 +1,9 @@
 package com.alexac.mistensiones
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.principal_activity.*
 import kotlinx.android.synthetic.main.principal_activity.edit_text_diastolica
@@ -15,16 +13,15 @@ import kotlinx.android.synthetic.main.principal_activity.edit_text_sistolica
 import kotlinx.android.synthetic.main.principal_activity.textViewNombreLogueado
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
-class PrincipalActivity : AppCompatActivity() {
+class PrincipalModificacionActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.principal_activity)
+        setContentView(R.layout.principal_modificacion_activity)
         editTextDate.setInputType(InputType.TYPE_NULL);
-        editTextTime.setInputType(InputType.TYPE_NULL);
 
         val bundle = intent.extras
         val email = bundle?.getString("email")
@@ -40,36 +37,24 @@ class PrincipalActivity : AppCompatActivity() {
 
     private fun setup(email: String){
 
-        imageButtonModificarDatosInicio.setOnClickListener {
-            val pantallaModificarDatosIntent = Intent(this, ModificarDatosInicioActivity::class.java).apply {
-                putExtra("email", email) }
-            startActivity(pantallaModificarDatosIntent)
-        }
-
         editTextDate.setOnClickListener {
             val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
-        editTextTime.setOnClickListener {
-            val timePicker = TimePickerFragment { onTimeSelected(it) }
-            timePicker.show(supportFragmentManager, "timePicker")
+        imageButtonModificarRegistro.setOnClickListener {
+            modificarRegistro(email)
+            limpiarCampos()
         }
 
-        imageButtonInsertarRegistro.setOnClickListener {
-            insertarRegistro(email)
+        imageButtonEliminarRegistro.setOnClickListener {
+            //eliminarRegistro()
+            limpiarCampos()
         }
 
-        imageButtonModificar.setOnClickListener {
-            val pantallaModificacionRegistrosIntent = Intent(this, modificarPrincipalActivity::class.java).apply {}
+        imageButtonVolver.setOnClickListener {
+           onBackPressed()
         }
-
-        imageButtonSalir.setOnClickListener {
-            val pantallaPrincipalIntent = Intent(this, LoginActivity::class.java).apply {}
-            FirebaseAuth.getInstance().signOut()
-            startActivity(pantallaPrincipalIntent)
-        }
-
 
     }
     private fun onDateSelected(day: Int, month: Int, year: Int) {
@@ -77,11 +62,9 @@ class PrincipalActivity : AppCompatActivity() {
         editTextDate.setText("$day-$month1-$year")
     }
 
-    private fun onTimeSelected(time: String) {
-        editTextTime.setText("$time")
-    }
 
-    private fun insertarRegistro(email: String){
+
+    private fun modificarRegistro(email: String){
         if(editTextDate.text.isNotEmpty() && editTextTime.text.isNotEmpty() && edit_text_sistolica.text.isNotEmpty() && edit_text_diastolica.text.isNotEmpty() && edit_text_oxigenacion.text.isNotEmpty() && edit_text_peso.text.isNotEmpty()){
             database.collection(email.toString()).document(editTextDate.text.toString()+"-"+editTextTime.text.toString()).set(
                     hashMapOf("fecha" to editTextDate.text.toString(),
@@ -100,9 +83,13 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
+    private fun consultaFecha(email: String){
+        val coleccionFechas = database.collection(email)
+        val consulta = coleccionFechas.whereEqualTo("fecha", editTextDateModificacion)
+    }
+
     private fun limpiarCampos(){
         editTextDate.text.clear()
-        editTextTime.text.clear()
         edit_text_sistolica.text.clear()
         edit_text_diastolica.text.clear()
         edit_text_oxigenacion.text.clear()
