@@ -1,10 +1,13 @@
 package com.alexac.mistensiones
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.principal_activity.*
 import kotlinx.android.synthetic.main.principal_activity.edit_text_diastolica
 import kotlinx.android.synthetic.main.principal_activity.edit_text_oxigenacion
@@ -56,10 +59,16 @@ class PrincipalModificacionActivity : AppCompatActivity() {
            onBackPressed()
         }
 
+        imageViewFiltrar.setOnClickListener {
+            filtrar(email)
+        }
+
     }
+
+    //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
     private fun onDateSelected(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
-        editTextDate.setText("$day-$month1-$year")
+        editTextDateModificacion.setText("$day-$month1-$year")
     }
 
 
@@ -83,16 +92,39 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         }
     }
 
-    private fun consultaFecha(email: String){
-        val coleccionFechas = database.collection(email)
-        val consulta = coleccionFechas.whereEqualTo("fecha", editTextDateModificacion)
+    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
+    private fun filtrar(email: String){
+        if(editTextDateModificacion.text.isNotEmpty()){
+            val coleccionFechas = database.collection(email)
+            coleccionFechas.whereEqualTo("fecha", editTextDateModificacion.text.toString()).get().addOnSuccessListener {documents ->
+                for (document in documents) {
+                    Log.d("Registro", "${document.id} => ${document.data}")
+                }
+                parsearDatos(documents)
+            }
+        }else {
+            Toast.makeText(this, "DEBE SELECCIONAR UNA FECHA PARA FILTRAR.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    //PARSEA TODOS LAS COLECCIONES CLAVE:VALOR DE FIREBASE A OBJETOS DE LA CLASE DOCUMENTODATOS Y DEVUELVE UN ARRAY CON OBJETOS DE LOS RESULTADOS
+    private fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos>{
+        val listaDocumentoDatos = arrayListOf<DocumentoDatos>()
+        for (document in documents) {
+            var DocumentoDatos = DocumentoDatos()
+            Log.d("Registro", "${document.id} => ${document.data}")
+            DocumentoDatos.fecha = document["fecha"] as String
+            DocumentoDatos.hora = document["hora"] as String
+            DocumentoDatos.sistolica = document["sistolica"] as Double
+            DocumentoDatos.diastolica = document["diastolica"] as Double
+            DocumentoDatos.peso = document["peso"] as Double
+            DocumentoDatos.oxigenacion = document["oxigenacion"] as Long
+            listaDocumentoDatos.add(DocumentoDatos)
+        }
+        return listaDocumentoDatos
     }
 
     private fun limpiarCampos(){
-        editTextDate.text.clear()
-        edit_text_sistolica.text.clear()
-        edit_text_diastolica.text.clear()
-        edit_text_oxigenacion.text.clear()
-        edit_text_peso.text.clear()
+
     }
 }
