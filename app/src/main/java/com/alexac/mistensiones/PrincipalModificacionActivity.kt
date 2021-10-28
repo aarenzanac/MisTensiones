@@ -1,11 +1,12 @@
 package com.alexac.mistensiones
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.principal_activity.*
@@ -13,18 +14,24 @@ import kotlinx.android.synthetic.main.principal_activity.edit_text_diastolica
 import kotlinx.android.synthetic.main.principal_activity.edit_text_oxigenacion
 import kotlinx.android.synthetic.main.principal_activity.edit_text_peso
 import kotlinx.android.synthetic.main.principal_activity.edit_text_sistolica
-import kotlinx.android.synthetic.main.principal_activity.textViewNombreLogueado
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
 class PrincipalModificacionActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
+    private lateinit var datosRecyclerview: RecyclerView
+    private lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_modificacion_activity)
         editTextDateModificacion.setInputType(InputType.TYPE_NULL);
+        datosRecyclerview = findViewById(R.id.listaDatos)
+        datosRecyclerview.layoutManager = LinearLayoutManager(this)
+        datosRecyclerview.setHasFixedSize(true)
+
+        listaDocumentoDatos = arrayListOf<DocumentoDatos>()
 
         val bundle = intent.extras
         val email = bundle?.getString("email")
@@ -100,7 +107,8 @@ class PrincipalModificacionActivity : AppCompatActivity() {
                 for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }
-                parsearDatos(documents)
+                listaDocumentoDatos = parsearDatos(documents)
+                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos)
             }
         }else {
             Toast.makeText(this, "DEBE SELECCIONAR UNA FECHA PARA FILTRAR.", Toast.LENGTH_SHORT).show()
