@@ -64,7 +64,7 @@
         <LinearLayout
             android:id="@+id/linearLayoutEntradaDatos"
             android:layout_width="match_parent"
-            android:layout_height="442dp"
+            android:layout_height="510dp"
             android:orientation="vertical">
 
             <LinearLayout

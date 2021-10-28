@@ -1,20 +1,26 @@
 package com.alexac.mistensiones
 
+import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.core.view.isNotEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.datos_item.*
+import kotlinx.android.synthetic.main.datos_item.view.*
 import kotlinx.android.synthetic.main.principal_activity.*
 import kotlinx.android.synthetic.main.principal_activity.edit_text_diastolica
 import kotlinx.android.synthetic.main.principal_activity.edit_text_oxigenacion
 import kotlinx.android.synthetic.main.principal_activity.edit_text_peso
 import kotlinx.android.synthetic.main.principal_activity.edit_text_sistolica
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
+import kotlinx.android.synthetic.main.principal_modificacion_activity.view.*
 
 class PrincipalModificacionActivity : AppCompatActivity() {
 
@@ -37,7 +43,7 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         val email = bundle?.getString("email")
 
         if (email != null) {
-            database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
+            database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener {
                 textViewNombreLogueadoPantallaModificacion.setText(it.get("nombre") as String?)
             }
             setup(email)
@@ -53,9 +59,10 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         }
 
         imageButtonModificarRegistro.setOnClickListener {
-            modificarRegistro(email)
+            //modificarRegistro(email)
             limpiarCampos()
         }
+
 
         imageButtonEliminarRegistro.setOnClickListener {
             //eliminarRegistro()
@@ -67,6 +74,7 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         }
 
         imageViewFiltrar.setOnClickListener {
+            limpiarCampos()
             filtrar(email)
         }
 
@@ -77,7 +85,6 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateModificacion.setText("$day-$month1-$year")
     }
-
 
 
     private fun modificarRegistro(email: String){
@@ -108,7 +115,12 @@ class PrincipalModificacionActivity : AppCompatActivity() {
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }
                 listaDocumentoDatos = parsearDatos(documents)
-                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos)
+                if (listaDocumentoDatos.isEmpty()){
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+                    Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
+                }else {
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+                }
             }
         }else {
             Toast.makeText(this, "DEBE SELECCIONAR UNA FECHA PARA FILTRAR.", Toast.LENGTH_SHORT).show()
@@ -133,6 +145,9 @@ class PrincipalModificacionActivity : AppCompatActivity() {
     }
 
     private fun limpiarCampos(){
-
+        edit_text_sistolica_modificaion.text.clear()
+        edit_text_oxigenacion_modificacion.text.clear()
+        edit_text_oxigenacion_modificacion.text.clear()
+        edit_text_peso_modificacion.text.clear()
     }
 }
