@@ -1,26 +1,16 @@
 package com.alexac.mistensiones
 
-import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.core.view.isNotEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.datos_item.*
-import kotlinx.android.synthetic.main.datos_item.view.*
 import kotlinx.android.synthetic.main.principal_activity.*
-import kotlinx.android.synthetic.main.principal_activity.edit_text_diastolica
-import kotlinx.android.synthetic.main.principal_activity.edit_text_oxigenacion
-import kotlinx.android.synthetic.main.principal_activity.edit_text_peso
-import kotlinx.android.synthetic.main.principal_activity.edit_text_sistolica
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
-import kotlinx.android.synthetic.main.principal_modificacion_activity.view.*
 
 class PrincipalModificacionActivity : AppCompatActivity() {
 
@@ -33,11 +23,14 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_modificacion_activity)
         editTextDateModificacion.setInputType(InputType.TYPE_NULL);
-        datosRecyclerview = findViewById(R.id.listaDatos)
-        datosRecyclerview.layoutManager = LinearLayoutManager(this)
-        datosRecyclerview.setHasFixedSize(true)
-
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
+        datosRecyclerview = findViewById(R.id.listaDatos)
+        datosRecyclerview.setHasFixedSize(true)
+        datosRecyclerview.layoutManager = LinearLayoutManager(this)
+        datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+
+
+
 
         val bundle = intent.extras
         val email = bundle?.getString("email")
@@ -48,7 +41,6 @@ class PrincipalModificacionActivity : AppCompatActivity() {
             }
             setup(email)
         }
-
     }
 
     private fun setup(email: String){
@@ -77,7 +69,7 @@ class PrincipalModificacionActivity : AppCompatActivity() {
             limpiarCampos()
             filtrar(email)
         }
-
+        
     }
 
     //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
@@ -85,7 +77,6 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateModificacion.setText("$day-$month1-$year")
     }
-
 
     private fun modificarRegistro(email: String){
         if(editTextDate.text.isNotEmpty() && editTextTime.text.isNotEmpty() && edit_text_sistolica.text.isNotEmpty() && edit_text_diastolica.text.isNotEmpty() && edit_text_oxigenacion.text.isNotEmpty() && edit_text_peso.text.isNotEmpty()){
@@ -120,6 +111,7 @@ class PrincipalModificacionActivity : AppCompatActivity() {
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
                 }else {
                     datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+
                 }
             }
         }else {

@@ -11,6 +11,7 @@
     app:cardElevation="8dp">
 
     <LinearLayout
+        android:id="@+id/layoutDatos"
         android:layout_width="match_parent"
         android:layout_height="103dp"
         android:orientation="vertical">

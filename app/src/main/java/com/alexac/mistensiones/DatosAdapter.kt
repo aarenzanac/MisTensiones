@@ -4,10 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, private val context: Context): RecyclerView.Adapter<DatosAdapter.DatosHolder>(){
@@ -37,6 +35,7 @@ class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, p
     }
 
     class DatosHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+
 
         val fecha: TextView = itemView.findViewById(R.id.textViewRecyclerFecha)
         val hora: TextView = itemView.findViewById(R.id.textViewRecyclerHora)
