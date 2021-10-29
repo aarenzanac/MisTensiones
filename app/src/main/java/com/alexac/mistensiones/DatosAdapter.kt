@@ -8,17 +8,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, private val context: Context): RecyclerView.Adapter<DatosAdapter.DatosHolder>(){
+class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, private val context: Context):  RecyclerView.Adapter<DatosAdapter.DatosHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatosHolder {
+    class DatosHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
-        val itemView = LayoutInflater.from(context).inflate(R.layout.datos_item, parent, false)
-        itemView.setOnClickListener {
-            Toast.makeText(context, "CLICK", Toast.LENGTH_SHORT).show()
-        }
-        return DatosHolder(itemView)
+        val fecha: TextView = itemView.findViewById(R.id.textViewRecyclerFecha)
+        val hora: TextView = itemView.findViewById(R.id.textViewRecyclerHora)
+        val sistolica: TextView = itemView.findViewById(R.id.textViewRecyclerSistolica)
+        val diastolica: TextView = itemView.findViewById(R.id.textViewRecyclerDiastolica)
+        val peso: TextView = itemView.findViewById(R.id.textViewRecyclerPeso)
+        val oxigenacion: TextView = itemView.findViewById(R.id.textViewRecyclerOxigenacion)
+
     }
-
 
     override fun onBindViewHolder(holder: DatosHolder, position: Int) {
         val itemActual = listaDocumentoDatos[position]
@@ -28,21 +29,20 @@ class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, p
         holder.diastolica.setText(itemActual.diastolica.toString())
         holder.peso.setText(itemActual.peso.toString())
         holder.oxigenacion.setText(itemActual.oxigenacion.toString())
+
     }
 
     override fun getItemCount(): Int {
         return listaDocumentoDatos.size
     }
 
-    class DatosHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DatosHolder {
+        val itemView = LayoutInflater.from(context).inflate(R.layout.datos_item, parent, false)
+        itemView.setOnClickListener {
+            Toast.makeText(parent.context, "CLICK.", Toast.LENGTH_SHORT).show()
 
-
-        val fecha: TextView = itemView.findViewById(R.id.textViewRecyclerFecha)
-        val hora: TextView = itemView.findViewById(R.id.textViewRecyclerHora)
-        val sistolica: TextView = itemView.findViewById(R.id.textViewRecyclerSistolica)
-        val diastolica: TextView = itemView.findViewById(R.id.textViewRecyclerDiastolica)
-        val peso: TextView = itemView.findViewById(R.id.textViewRecyclerPeso)
-        val oxigenacion: TextView = itemView.findViewById(R.id.textViewRecyclerOxigenacion)
+        }
+        return DatosHolder(itemView)
 
     }
 

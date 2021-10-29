@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.datos_item.*
+import kotlinx.android.synthetic.main.datos_item.view.*
 import kotlinx.android.synthetic.main.principal_activity.*
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
@@ -28,7 +30,6 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         datosRecyclerview.setHasFixedSize(true)
         datosRecyclerview.layoutManager = LinearLayoutManager(this)
         datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
-
 
 
 
@@ -134,6 +135,15 @@ class PrincipalModificacionActivity : AppCompatActivity() {
             listaDocumentoDatos.add(DocumentoDatos)
         }
         return listaDocumentoDatos
+    }
+
+    //FUNCION PARA RELLENAR CAMPOS AL HACER CLICK EN CARDVIEW
+    private fun click(){
+        edit_text_sistolica_modificaion.setText(cardViewDatos.textViewRecyclerSistolica.toString()) as Double
+        edit_text_diastolica_modificacion.setText(cardViewDatos.textViewRecyclerDiastolica.toString()) as Double
+        edit_text_peso_modificacion.setText(cardViewDatos.textViewRecyclerPeso.toString()) as Int
+        edit_text_oxigenacion_modificacion.setText(cardViewDatos.textViewRecyclerOxigenacion.toString()) as Long
+
     }
 
     private fun limpiarCampos(){
