@@ -7,18 +7,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alexac.mistensiones.fecha_hora.DatePickerFragment
+import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.datos_item.*
-import kotlinx.android.synthetic.main.datos_item.view.*
-import kotlinx.android.synthetic.main.principal_activity.*
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
-class PrincipalModificacionActivity : AppCompatActivity() {
+class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClickListener {
 
     private val database = FirebaseFirestore.getInstance()
     private lateinit var datosRecyclerview: RecyclerView
     private lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
+    private var posicionItem = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -29,7 +30,8 @@ class PrincipalModificacionActivity : AppCompatActivity() {
         datosRecyclerview = findViewById(R.id.listaDatos)
         datosRecyclerview.setHasFixedSize(true)
         datosRecyclerview.layoutManager = LinearLayoutManager(this)
-        datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+        datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+
 
 
 
@@ -46,19 +48,20 @@ class PrincipalModificacionActivity : AppCompatActivity() {
 
     private fun setup(email: String){
 
+
         editTextDateModificacion.setOnClickListener {
             val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
         imageButtonModificarRegistro.setOnClickListener {
-            //modificarRegistro(email)
+            modificarRegistro(email)
             limpiarCampos()
         }
 
 
         imageButtonEliminarRegistro.setOnClickListener {
-            //eliminarRegistro()
+            eliminarRegistro(email)
             limpiarCampos()
         }
 
@@ -80,21 +83,33 @@ class PrincipalModificacionActivity : AppCompatActivity() {
     }
 
     private fun modificarRegistro(email: String){
-        if(editTextDate.text.isNotEmpty() && editTextTime.text.isNotEmpty() && edit_text_sistolica.text.isNotEmpty() && edit_text_diastolica.text.isNotEmpty() && edit_text_oxigenacion.text.isNotEmpty() && edit_text_peso.text.isNotEmpty()){
-            database.collection(email.toString()).document(editTextDate.text.toString()+"-"+editTextTime.text.toString()).set(
-                    hashMapOf("fecha" to editTextDate.text.toString(),
-                            "hora" to editTextTime.text.toString(),
-                            "sistolica" to edit_text_sistolica.text.toString().toDouble(),
-                            "diastolica" to edit_text_diastolica.text.toString().toDouble(),
-                            "oxigenacion" to edit_text_oxigenacion.text.toString().toInt(),
-                            "peso" to edit_text_peso.text.toString().toDouble()
+        if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_oxigenacion_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()){
+            database.collection(email.toString()).document(listaDocumentoDatos[posicionItem].fecha+"-"+listaDocumentoDatos[posicionItem].hora).set(
+                    hashMapOf("fecha" to listaDocumentoDatos[posicionItem].fecha,
+                            "hora" to listaDocumentoDatos[posicionItem].hora,
+                            "sistolica" to edit_text_sistolica_modificaion.text.toString().toDouble(),
+                            "diastolica" to edit_text_diastolica_modificacion.text.toString().toDouble(),
+                            "oxigenacion" to edit_text_oxigenacion_modificacion.text.toString().toInt(),
+                            "peso" to edit_text_peso_modificacion.text.toString().toDouble()
                     )
             )
-            Toast.makeText(this, "REGISTRO AÑADIDO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "REGISTRO MODIFICADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+            filtrar(email)
             limpiarCampos()
 
         }else{
-            Toast.makeText(this, "LA EDAD DEBE ESTAR COMPRENDIDA ENTRE 18 Y 100 AÑOS. REVISELA, POR FAVOR.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "DEBE RELLENAR TODOS LOS CAMPOS. REVÍSELO, POR FAVOR.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun eliminarRegistro(email: String){
+        if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_oxigenacion_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()) {
+            database.collection(email.toString()).document(listaDocumentoDatos[posicionItem].fecha+"-"+listaDocumentoDatos[posicionItem].hora).delete()
+            Toast.makeText(this, "REGISTRO ELIMINADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+            filtrar(email)
+            limpiarCampos()
+        }else{
+            Toast.makeText(this, "DEBE SELECCIONAR UN REGISTRO EN EL GRID.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -108,10 +123,10 @@ class PrincipalModificacionActivity : AppCompatActivity() {
                 }
                 listaDocumentoDatos = parsearDatos(documents)
                 if (listaDocumentoDatos.isEmpty()){
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
                 }else {
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this)
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
 
                 }
             }
@@ -123,6 +138,7 @@ class PrincipalModificacionActivity : AppCompatActivity() {
     //PARSEA TODOS LAS COLECCIONES CLAVE:VALOR DE FIREBASE A OBJETOS DE LA CLASE DOCUMENTODATOS Y DEVUELVE UN ARRAY CON OBJETOS DE LOS RESULTADOS
     private fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos>{
         val listaDocumentoDatos = arrayListOf<DocumentoDatos>()
+        var posicion = 0
         for (document in documents) {
             var DocumentoDatos = DocumentoDatos()
             Log.d("Registro", "${document.id} => ${document.data}")
@@ -132,24 +148,25 @@ class PrincipalModificacionActivity : AppCompatActivity() {
             DocumentoDatos.diastolica = document["diastolica"] as Double
             DocumentoDatos.peso = document["peso"] as Double
             DocumentoDatos.oxigenacion = document["oxigenacion"] as Long
+            DocumentoDatos.posicion = posicion
             listaDocumentoDatos.add(DocumentoDatos)
+            posicion += 1
         }
         return listaDocumentoDatos
     }
 
-    //FUNCION PARA RELLENAR CAMPOS AL HACER CLICK EN CARDVIEW
-    private fun click(){
-        edit_text_sistolica_modificaion.setText(cardViewDatos.textViewRecyclerSistolica.toString()) as Double
-        edit_text_diastolica_modificacion.setText(cardViewDatos.textViewRecyclerDiastolica.toString()) as Double
-        edit_text_peso_modificacion.setText(cardViewDatos.textViewRecyclerPeso.toString()) as Int
-        edit_text_oxigenacion_modificacion.setText(cardViewDatos.textViewRecyclerOxigenacion.toString()) as Long
-
-    }
-
     private fun limpiarCampos(){
         edit_text_sistolica_modificaion.text.clear()
-        edit_text_oxigenacion_modificacion.text.clear()
+        edit_text_diastolica_modificacion.text.clear()
         edit_text_oxigenacion_modificacion.text.clear()
         edit_text_peso_modificacion.text.clear()
+    }
+
+    override fun onItemClick(item: DocumentoDatos) {
+        edit_text_sistolica_modificaion.setText(item.sistolica.toString())
+        edit_text_diastolica_modificacion.setText(item.diastolica.toString())
+        edit_text_oxigenacion_modificacion.setText(item.oxigenacion.toString())
+        edit_text_peso_modificacion.setText(item.peso.toString())
+        posicionItem = item.posicion
     }
 }

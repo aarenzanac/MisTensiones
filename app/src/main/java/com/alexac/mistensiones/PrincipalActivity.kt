@@ -5,15 +5,11 @@ import android.os.Bundle
 import android.text.InputType
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.alexac.mistensiones.fecha_hora.DatePickerFragment
+import com.alexac.mistensiones.fecha_hora.TimePickerFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.principal_activity.*
-import kotlinx.android.synthetic.main.principal_activity.edit_text_diastolica
-import kotlinx.android.synthetic.main.principal_activity.edit_text_oxigenacion
-import kotlinx.android.synthetic.main.principal_activity.edit_text_peso
-import kotlinx.android.synthetic.main.principal_activity.edit_text_sistolica
-import kotlinx.android.synthetic.main.principal_activity.textViewNombreLogueado
-import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
 class PrincipalActivity : AppCompatActivity() {
 
