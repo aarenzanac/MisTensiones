@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/layoutDatos"
         android:layout_width="match_parent"
-        android:layout_height="103dp"
+        android:layout_height="142dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -122,6 +122,23 @@
                 android:text="TextView" />
 
             <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/glucemia_mg_dl"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewRecyclerGlucemia"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="TextView" />
+
+            <TextView
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -132,11 +149,27 @@
 
             <TextView
                 android:id="@+id/textViewRecyclerOxigenacion"
-                android:layout_width="wrap_content"
+                android:layout_width="38dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="Text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewRecyclerObservaciones"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine" />
         </LinearLayout>
     </LinearLayout>
 

@@ -68,16 +68,7 @@ class ModificarDatosInicioActivity : AppCompatActivity() {
 
     }
 
-    /*private fun goPrincipalActivity(email: String, nombre: String, edad: Int, altura: Int){
-        val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
-            putExtra("email", email)
-            putExtra("nombre", nombre)
-            putExtra("edad", edad)
-            putExtra("altura", altura)
-        }
 
-        startActivity(pantallaPrincipalIntent)
-    }*/
     private fun goPrincipalActivity(email: String) {
         val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
             putExtra("email", email)

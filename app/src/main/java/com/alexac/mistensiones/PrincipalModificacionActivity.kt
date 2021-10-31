@@ -83,14 +83,23 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
     }
 
     private fun modificarRegistro(email: String){
-        if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_oxigenacion_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()){
+        if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()){
+            if(edit_text_glucemia_modificacion.text.isEmpty()){
+                edit_text_glucemia_modificacion.setText("0.0")
+            }
+            if(edit_text_oxigenacion_modificacion.text.isEmpty()){
+                edit_text_oxigenacion_modificacion.setText("0")
+            }
+
             database.collection(email.toString()).document(listaDocumentoDatos[posicionItem].fecha+"-"+listaDocumentoDatos[posicionItem].hora).set(
                     hashMapOf("fecha" to listaDocumentoDatos[posicionItem].fecha,
                             "hora" to listaDocumentoDatos[posicionItem].hora,
                             "sistolica" to edit_text_sistolica_modificaion.text.toString().toDouble(),
                             "diastolica" to edit_text_diastolica_modificacion.text.toString().toDouble(),
-                            "oxigenacion" to edit_text_oxigenacion_modificacion.text.toString().toInt(),
-                            "peso" to edit_text_peso_modificacion.text.toString().toDouble()
+                            "oxigenacion" to edit_text_oxigenacion_modificacion.text.toString().toLong(),
+                            "peso" to edit_text_peso_modificacion.text.toString().toDouble(),
+                            "glucemia" to edit_text_glucemia_modificacion.text.toString().toDouble(),
+                            "observaciones" to edit_text_observaciones_modificacion.text.toString()
                     )
             )
             Toast.makeText(this, "REGISTRO MODIFICADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
@@ -148,6 +157,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
             DocumentoDatos.diastolica = document["diastolica"] as Double
             DocumentoDatos.peso = document["peso"] as Double
             DocumentoDatos.oxigenacion = document["oxigenacion"] as Long
+            DocumentoDatos.glucosa = document["glucemia"] as Double
+            DocumentoDatos.observaciones = document["observaciones"] as String
             DocumentoDatos.posicion = posicion
             listaDocumentoDatos.add(DocumentoDatos)
             posicion += 1
@@ -160,6 +171,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         edit_text_diastolica_modificacion.text.clear()
         edit_text_oxigenacion_modificacion.text.clear()
         edit_text_peso_modificacion.text.clear()
+        edit_text_glucemia_modificacion.text.clear()
+        edit_text_observaciones_modificacion.text.clear()
     }
 
     override fun onItemClick(item: DocumentoDatos) {
@@ -167,6 +180,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         edit_text_diastolica_modificacion.setText(item.diastolica.toString())
         edit_text_oxigenacion_modificacion.setText(item.oxigenacion.toString())
         edit_text_peso_modificacion.setText(item.peso.toString())
+        edit_text_glucemia_modificacion.setText(item.glucosa.toString())
+        edit_text_observaciones_modificacion.setText(item.observaciones.toString())
         posicionItem = item.posicion
     }
 }

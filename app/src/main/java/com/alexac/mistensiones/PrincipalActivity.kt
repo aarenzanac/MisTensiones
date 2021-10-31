@@ -81,14 +81,22 @@ class PrincipalActivity : AppCompatActivity() {
     }
 
     private fun insertarRegistro(email: String){
-        if(editTextDate.text.isNotEmpty() && editTextTime.text.isNotEmpty() && edit_text_sistolica.text.isNotEmpty() && edit_text_diastolica.text.isNotEmpty() && edit_text_oxigenacion.text.isNotEmpty() && edit_text_peso.text.isNotEmpty()){
+        if(editTextDate.text.isNotEmpty() && editTextTime.text.isNotEmpty() && edit_text_sistolica.text.isNotEmpty() && edit_text_diastolica.text.isNotEmpty() && edit_text_peso.text.isNotEmpty()){
+            if(editTextGlucemia.text.isEmpty()){
+                editTextGlucemia.setText("0.0")
+            }
+            if(edit_text_oxigenacion.text.isEmpty()){
+                edit_text_oxigenacion.setText("0")
+            }
             database.collection(email.toString()).document(editTextDate.text.toString()+"-"+editTextTime.text.toString()).set(
                     hashMapOf("fecha" to editTextDate.text.toString(),
                             "hora" to editTextTime.text.toString(),
                             "sistolica" to edit_text_sistolica.text.toString().toDouble(),
                             "diastolica" to edit_text_diastolica.text.toString().toDouble(),
-                            "oxigenacion" to edit_text_oxigenacion.text.toString().toInt(),
-                            "peso" to edit_text_peso.text.toString().toDouble()
+                            "oxigenacion" to edit_text_oxigenacion.text.toString().toLong(),
+                            "peso" to edit_text_peso.text.toString().toDouble(),
+                            "glucemia" to editTextGlucemia.text.toString().toDouble(),
+                            "observaciones" to editTextObservaciones.text.toString()
                     )
             )
             Toast.makeText(this, "REGISTRO AÑADIDO CON ÉXITO.", Toast.LENGTH_SHORT).show()
@@ -106,5 +114,7 @@ class PrincipalActivity : AppCompatActivity() {
         edit_text_diastolica.text.clear()
         edit_text_oxigenacion.text.clear()
         edit_text_peso.text.clear()
+        editTextGlucemia.text.clear()
+        editTextObservaciones.text.clear()
     }
 }

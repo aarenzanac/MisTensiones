@@ -5,253 +5,296 @@
     android:id="@+id/modificarPrincipalActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/image_view_titulo"
-            android:layout_width="269dp"
-            android:layout_height="53dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/titulo"
-            app:srcCompat="@mipmap/titulo" />
-
-        <TextView
-            android:id="@+id/text_view_inicio"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="@string/editar_registros"
-            android:textAlignment="center"
-            android:textColor="#350D0D"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewNombreLogueadoPantallaModificacion"
-                android:layout_width="match_parent"
-                android:layout_height="37dp"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/nombrelogueado"
-                android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_inicio" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutEntradaDatos"
-            android:layout_width="match_parent"
-            android:layout_height="551dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/layoutFechaHora"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="235dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/seleccione_fecha"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/editTextDateModificacion"
-                    android:layout_width="146dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="center_horizontal"
-                    android:hint="@string/fecha"
-                    android:importantForAutofill="no" />
-
-                <ImageView
-                    android:id="@+id/imageViewFiltrar"
-                    android:layout_width="123dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
-
-            </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="339dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/listaDatos"
+                <ImageView
+                    android:id="@+id/image_view_titulo"
+                    android:layout_width="269dp"
+                    android:layout_height="53dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/titulo"
+                    app:srcCompat="@mipmap/titulo" />
+
+                <TextView
+                    android:id="@+id/text_view_inicio"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:listitem="@layout/datos_item" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="36dp"
                     android:gravity="center_horizontal|center_vertical"
-                    android:text="Sistólica mmHg"
+                    android:text="@string/editar_registros"
+                    android:textAlignment="center"
+                    android:textColor="#350D0D"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewNombreLogueadoPantallaModificacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="37dp"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="@string/nombrelogueado"
+                        android:textSize="18sp"
+                        app:layout_constraintTop_toBottomOf="@+id/text_view_inicio" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutEntradaDatos"
+                    android:layout_width="match_parent"
+                    android:layout_height="517dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/layoutFechaHora"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="235dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="@string/seleccione_fecha"
+                            android:textAlignment="center"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/editTextDateModificacion"
+                            android:layout_width="146dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:gravity="center_horizontal"
+                            android:hint="@string/fecha"
+                            android:importantForAutofill="no" />
+
+                        <ImageView
+                            android:id="@+id/imageViewFiltrar"
+                            android:layout_width="123dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/botonfiltrar"
+                            app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/listaDatos"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            tools:listitem="@layout/datos_item" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="@string/sist_lica_mmhg"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="@string/diast_lica_mmhg"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edit_text_sistolica_modificaion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:hint="@string/sist_lica_mmhg"
+                            android:inputType="numberDecimal|textEmailAddress" />
+
+                        <EditText
+                            android:id="@+id/edit_text_diastolica_modificacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:hint="@string/diast_lica_mmhg"
+                            android:inputType="numberDecimal|textEmailAddress" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="58dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="@string/oxigenacion"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:text="@string/glucemia_mg_dl"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="99dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="@string/peso_kg"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edit_text_oxigenacion_modificacion"
+                            android:layout_width="89dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:hint="@string/oxigenacion"
+                            android:inputType="number|textEmailAddress" />
+
+                        <EditText
+                            android:id="@+id/edit_text_glucemia_modificacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:hint="@string/glucemia_mg_dl"
+                            android:inputType="numberDecimal"
+                            android:importantForAutofill="no" />
+
+                        <EditText
+                            android:id="@+id/edit_text_peso_modificacion"
+                            android:layout_width="126dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:hint="@string/peso_kg"
+                            android:inputType="numberDecimal|textEmailAddress" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/edit_text_observaciones_modificacion"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:gravity="start|top"
+                            android:importantForAutofill="no"
+                            android:inputType="textMultiLine" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="Diastólica mmHg"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/imageButtonModificarRegistro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/imagen_modificar_registro"
+                        app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonEliminarRegistro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/string_boton_eliminar"
+                        app:srcCompat="@mipmap/ic_trash_can_outline_grey600_48dp" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/imageButtonVolver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/botonvolver"
+                    app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
+
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/edit_text_sistolica_modificaion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_weight="1"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/sist_lica_mmhg"
-                    android:inputType="numberDecimal|textEmailAddress" />
-
-                <EditText
-                    android:id="@+id/edit_text_diastolica_modificacion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_weight="1"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/diast_lica_mmhg"
-                    android:inputType="numberDecimal|textEmailAddress" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="Oxigenacion %"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="99dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="Peso Kg"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/edit_text_oxigenacion_modificacion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_weight="1"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/oxigenacion"
-                    android:inputType="number|textEmailAddress" />
-
-                <EditText
-                    android:id="@+id/edit_text_peso_modificacion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_weight="1"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/peso_kg"
-                    android:inputType="numberDecimal|textEmailAddress" />
-            </LinearLayout>
-
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/imageButtonModificarRegistro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/imagen_modificar_registro"
-                app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
-
-            <ImageButton
-                android:id="@+id/imageButtonEliminarRegistro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/string_boton_eliminar"
-                app:srcCompat="@mipmap/ic_trash_can_outline_grey600_48dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-
-        <ImageButton
-            android:id="@+id/imageButtonVolver"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/botonvolver"
-            app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

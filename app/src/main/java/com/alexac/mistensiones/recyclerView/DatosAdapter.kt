@@ -45,6 +45,8 @@ class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, p
             itemView.textViewRecyclerDiastolica.text = item.diastolica.toString()
             itemView.textViewRecyclerOxigenacion.text = item.oxigenacion.toString()
             itemView.textViewRecyclerPeso.text = item.peso.toString()
+            itemView.textViewRecyclerGlucemia.text = item.glucosa.toString()
+            itemView.textViewRecyclerObservaciones.text = item.observaciones
             val posicion = position
         }
     }

@@ -53,7 +53,9 @@ class DatosInicioActivity : AppCompatActivity() {
                                     "sistolica" to "",
                                     "diastolica" to "",
                                     "oxigenacion" to "",
-                                    "peso" to ""
+                                    "peso" to "",
+                                    "glucemia" to "",
+                                    "observaciones" to "",
                                 )
                             )
                             //goPrincipalActivity(email, edit_text_nombre.text.toString(), edit_text_edad.text.toString().toInt(), edit_text_altura.text.toString().toInt())
