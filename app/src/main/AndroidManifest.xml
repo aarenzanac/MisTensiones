@@ -44,6 +44,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreen">
         </activity>
+        <activity android:name=".HistorialActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashScreen">
+        </activity>
     </application>
 
 </manifest>

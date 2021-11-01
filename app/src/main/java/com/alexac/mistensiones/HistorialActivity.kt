@@ -11,9 +11,10 @@ import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.historial_activity.*
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
-class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClickListener {
+class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClickListener {
 
     private val database = FirebaseFirestore.getInstance()
     private lateinit var datosRecyclerview: RecyclerView
@@ -24,13 +25,14 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.principal_modificacion_activity)
-        editTextDateModificacion.setInputType(InputType.TYPE_NULL);
+        setContentView(R.layout.historial_activity)
+        editTextDateHistorial.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
-        datosRecyclerview = findViewById(R.id.listaDatos)
+        datosRecyclerview = findViewById(R.id.listaDatosHistorial)
         datosRecyclerview.setHasFixedSize(true)
         datosRecyclerview.layoutManager = LinearLayoutManager(this)
         datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+
 
 
 
@@ -40,38 +42,29 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
 
         if (email != null) {
             database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener {
-                textViewNombreLogueadoPantallaModificacion.setText(it.get("nombre") as String?)
+                textViewNombreLogueadoPantallaHistorial.setText(it.get("nombre") as String?)
             }
             setup(email)
+            mostrarTodo(email)
         }
     }
 
     private fun setup(email: String){
 
 
-        editTextDateModificacion.setOnClickListener {
+        editTextDateHistorial.setOnClickListener {
             val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
-        imageButtonModificarRegistro.setOnClickListener {
-            modificarRegistro(email)
-            limpiarCampos()
-        }
 
-
-        imageButtonEliminarRegistro.setOnClickListener {
-            eliminarRegistro(email)
-            limpiarCampos()
-        }
-
-        imageButtonVolver.setOnClickListener {
+        imageButtonVolverHistorial.setOnClickListener {
            onBackPressed()
         }
 
-        imageViewFiltrar.setOnClickListener {
-            limpiarCampos()
+        imageViewFiltrarHistorial.setOnClickListener {
             filtrar(email)
+
         }
         
     }
@@ -82,46 +75,25 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         editTextDateModificacion.setText("$day-$month1-$year")
     }
 
-    private fun modificarRegistro(email: String){
-        if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()){
-            if(edit_text_glucemia_modificacion.text.isEmpty()){
-                edit_text_glucemia_modificacion.setText("0.0")
-            }
-            if(edit_text_oxigenacion_modificacion.text.isEmpty()){
-                edit_text_oxigenacion_modificacion.setText("0")
-            }
+    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
+    private fun mostrarTodo(email: String){
 
-            database.collection(email.toString()).document(listaDocumentoDatos[posicionItem].fecha+"-"+listaDocumentoDatos[posicionItem].hora).set(
-                    hashMapOf("fecha" to listaDocumentoDatos[posicionItem].fecha,
-                            "hora" to listaDocumentoDatos[posicionItem].hora,
-                            "sistolica" to edit_text_sistolica_modificaion.text.toString().toDouble(),
-                            "diastolica" to edit_text_diastolica_modificacion.text.toString().toDouble(),
-                            "oxigenacion" to edit_text_oxigenacion_modificacion.text.toString().toLong(),
-                            "peso" to edit_text_peso_modificacion.text.toString().toDouble(),
-                            "glucemia" to edit_text_glucemia_modificacion.text.toString().toDouble(),
-                            "observaciones" to edit_text_observaciones_modificacion.text.toString(),
-                            "timestamp" to listaDocumentoDatos[posicionItem].timestamp
-                    )
-            )
-            Toast.makeText(this, "REGISTRO MODIFICADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
-            filtrar(email)
-            limpiarCampos()
+        val coleccionFechas = database.collection(email)
+        coleccionFechas.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d("Registro", "${document.id} => ${document.data}")
+            }
+            listaDocumentoDatos = parsearDatos(documents)
+            if (listaDocumentoDatos.isEmpty()) {
+                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+                Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
+            } else {
+                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
 
-        }else{
-            Toast.makeText(this, "DEBE RELLENAR TODOS LOS CAMPOS. REVÍSELO, POR FAVOR.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    fun eliminarRegistro(email: String){
-        if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_oxigenacion_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()) {
-            database.collection(email.toString()).document(listaDocumentoDatos[posicionItem].fecha+"-"+listaDocumentoDatos[posicionItem].hora).delete()
-            Toast.makeText(this, "REGISTRO ELIMINADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
-            filtrar(email)
-            limpiarCampos()
-        }else{
-            Toast.makeText(this, "DEBE SELECCIONAR UN REGISTRO EN EL GRID.", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
     private fun filtrar(email: String){
@@ -184,23 +156,9 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
 
         return listaDocumentoDatos
     }
-    //LIMPIA TODOS LOS CAMPOS
-    private fun limpiarCampos(){
-        edit_text_sistolica_modificaion.text.clear()
-        edit_text_diastolica_modificacion.text.clear()
-        edit_text_oxigenacion_modificacion.text.clear()
-        edit_text_peso_modificacion.text.clear()
-        edit_text_glucemia_modificacion.text.clear()
-        edit_text_observaciones_modificacion.text.clear()
-    }
-    //FUNCION SOBEESCRITA DEL ADAPTER QUE SETEA LOS CAMPOS CON LOS DATOS DE LA TARJETA CLICADA
+
     override fun onItemClick(item: DocumentoDatos) {
-        edit_text_sistolica_modificaion.setText(item.sistolica.toString())
-        edit_text_diastolica_modificacion.setText(item.diastolica.toString())
-        edit_text_oxigenacion_modificacion.setText(item.oxigenacion.toString())
-        edit_text_peso_modificacion.setText(item.peso.toString())
-        edit_text_glucemia_modificacion.setText(item.glucosa.toString())
-        edit_text_observaciones_modificacion.setText(item.observaciones.toString())
-        posicionItem = item.posicion
+        TODO("Not yet implemented")
     }
+
 }

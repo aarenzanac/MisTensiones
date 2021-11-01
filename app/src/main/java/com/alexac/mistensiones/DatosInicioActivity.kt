@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.datos_inicio_activity.*
 class DatosInicioActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
-    val fechaActual = System.currentTimeMillis()
+    private val fechaActual = System.currentTimeMillis()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -47,7 +47,7 @@ class DatosInicioActivity : AppCompatActivity() {
                                     "sexo" to sexo
                                     )
                             )
-                            database.collection(email).document(fechaActual.toString()).set(
+                            /*database.collection(email).document(fechaActual.toString()).set(
                                     hashMapOf("fecha" to "",
                                     "hora" to "",
                                     "sistolica" to "",
@@ -55,9 +55,9 @@ class DatosInicioActivity : AppCompatActivity() {
                                     "oxigenacion" to "",
                                     "peso" to "",
                                     "glucemia" to "",
-                                    "observaciones" to "",
+                                    "observaciones" to ""
                                 )
-                            )
+                            )*/
                             //goPrincipalActivity(email, edit_text_nombre.text.toString(), edit_text_edad.text.toString().toInt(), edit_text_altura.text.toString().toInt())
                             goPrincipalActivity(email)
                         }else{
@@ -77,16 +77,7 @@ class DatosInicioActivity : AppCompatActivity() {
 
     }
 
-    /*private fun goPrincipalActivity(email: String, nombre: String, edad: Int, altura: Int){
-        val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
-            putExtra("email", email)
-            putExtra("nombre", nombre)
-            putExtra("edad", edad)
-            putExtra("altura", altura)
-        }
 
-        startActivity(pantallaPrincipalIntent)
-    }*/
     private fun goPrincipalActivity(email: String) {
         val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
             putExtra("email", email)

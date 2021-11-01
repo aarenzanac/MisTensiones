@@ -10,10 +10,19 @@ import com.alexac.mistensiones.fecha_hora.TimePickerFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.principal_activity.*
+import java.sql.Timestamp
+
 
 class PrincipalActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
+    var dia = 0
+    var mes = 0
+    var año = 0
+    var hora = 0
+    var minutos = 0
+    var segundos = 0
+    var nanosegundos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,15 +46,24 @@ class PrincipalActivity : AppCompatActivity() {
     private fun setup(email: String){
 
         imageButtonModificarDatosInicio.setOnClickListener {
-            val pantallaModificarDatosIntent = Intent(this, ModificarDatosInicioActivity::class.java).apply {
+            val pantallaModificarDatosIntent = Intent(
+                this,
+                ModificarDatosInicioActivity::class.java
+            ).apply {
                 putExtra("email", email) }
             startActivity(pantallaModificarDatosIntent)
         }
 
         editTextDate.setOnClickListener {
-            val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
+            val datePicker = DatePickerFragment { day, month, year -> onDateSelected(
+                day,
+                month,
+                year
+            ) }
             datePicker.show(supportFragmentManager, "datePicker")
+
         }
+
 
         editTextTime.setOnClickListener {
             val timePicker = TimePickerFragment { onTimeSelected(it) }
@@ -63,6 +81,13 @@ class PrincipalActivity : AppCompatActivity() {
             startActivity(pantallaModificacionRegistrosIntent)
         }
 
+        imageButtonHistorial.setOnClickListener {
+            val pantallaHistorialIntent = Intent(this, HistorialActivity::class.java).apply {
+                putExtra("email", email)
+            }
+            startActivity(pantallaHistorialIntent)
+        }
+
         imageButtonSalir.setOnClickListener {
             val pantallaPrincipalIntent = Intent(this, LoginActivity::class.java).apply {}
             FirebaseAuth.getInstance().signOut()
@@ -74,10 +99,17 @@ class PrincipalActivity : AppCompatActivity() {
     private fun onDateSelected(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDate.setText("$day-$month1-$year")
+        dia = day.toInt()
+        mes = month.toInt()
+        año = year.toInt() - 1900
     }
 
     private fun onTimeSelected(time: String) {
         editTextTime.setText("$time")
+        val stringArray: List<String> = time.split(":")
+        hora = stringArray[0].toInt()
+        minutos = stringArray[1].toInt()
+
     }
 
     private fun insertarRegistro(email: String){
@@ -88,16 +120,19 @@ class PrincipalActivity : AppCompatActivity() {
             if(edit_text_oxigenacion.text.isEmpty()){
                 edit_text_oxigenacion.setText("0")
             }
-            database.collection(email.toString()).document(editTextDate.text.toString()+"-"+editTextTime.text.toString()).set(
-                    hashMapOf("fecha" to editTextDate.text.toString(),
-                            "hora" to editTextTime.text.toString(),
-                            "sistolica" to edit_text_sistolica.text.toString().toDouble(),
-                            "diastolica" to edit_text_diastolica.text.toString().toDouble(),
-                            "oxigenacion" to edit_text_oxigenacion.text.toString().toLong(),
-                            "peso" to edit_text_peso.text.toString().toDouble(),
-                            "glucemia" to editTextGlucemia.text.toString().toDouble(),
-                            "observaciones" to editTextObservaciones.text.toString()
-                    )
+            var timestamp: Long = crearTimestamp(dia, mes, año, hora, minutos, segundos, nanosegundos)
+            database.collection(email.toString()).document(editTextDate.text.toString() + "-" + editTextTime.text.toString()).set(
+                hashMapOf(
+                    "fecha" to editTextDate.text.toString(),
+                    "hora" to editTextTime.text.toString(),
+                    "sistolica" to edit_text_sistolica.text.toString().toDouble(),
+                    "diastolica" to edit_text_diastolica.text.toString().toDouble(),
+                    "oxigenacion" to edit_text_oxigenacion.text.toString().toLong(),
+                    "peso" to edit_text_peso.text.toString().toDouble(),
+                    "glucemia" to editTextGlucemia.text.toString().toDouble(),
+                    "observaciones" to editTextObservaciones.text.toString(),
+                    "timestamp" to timestamp
+                )
             )
             Toast.makeText(this, "REGISTRO AÑADIDO CON ÉXITO.", Toast.LENGTH_SHORT).show()
             limpiarCampos()
@@ -107,9 +142,17 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
+    private fun crearTimestamp(dia: Int, mes: Int, año: Int, horas: Int, minutos: Int, segundos: Int, nanosegundos: Int): Long{
+        var timestamp = Timestamp(año, mes, dia, hora, minutos, segundos, nanosegundos)
+        var milisegundos: Long = timestamp.toInstant().toEpochMilli()
+        return milisegundos
+
+
+    }
+
     private fun limpiarCampos(){
-        editTextDate.text.clear()
-        editTextTime.text.clear()
+        editTextDate.setText("")
+        editTextTime.setText("")
         edit_text_sistolica.text.clear()
         edit_text_diastolica.text.clear()
         edit_text_oxigenacion.text.clear()
@@ -117,4 +160,5 @@ class PrincipalActivity : AppCompatActivity() {
         editTextGlucemia.text.clear()
         editTextObservaciones.text.clear()
     }
+
 }

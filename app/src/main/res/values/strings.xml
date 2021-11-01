@@ -47,4 +47,5 @@
     <string name="glucemia_mg_dl">Glucemia mg/dl</string>
     <string name="observaciones">Observaciones</string>
     <string name="botonfiltrar">BotonFiltrar</string>
+    <string name="historial">HISTORIAL</string>
 </resources>
