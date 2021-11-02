@@ -25,7 +25,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/fecha"
@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -54,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="@string/textview" />
         </LinearLayout>
 
         <LinearLayout
@@ -66,7 +66,7 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/sist_lica_mmhg"
@@ -78,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
             <TextView
                 android:id="@+id/textView10"
@@ -95,7 +95,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="@string/textview" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,7 +107,7 @@
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/peso_kg"
@@ -119,7 +119,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -136,7 +136,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
             <TextView
                 android:id="@+id/textView13"
@@ -153,23 +153,34 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Text" />
+                android:text="@string/text" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/textViewRecyclerObservaciones"
-                android:layout_width="match_parent"
+                android:layout_width="333dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
+
+            <CheckBox
+                android:id="@+id/checkBoxSemaforo"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:enabled="false"
+                android:hapticFeedbackEnabled="false"
+                android:paddingStart="20dp" />
+
         </LinearLayout>
     </LinearLayout>
 

@@ -163,9 +163,20 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
             DocumentoDatos.posicion = posicion
             DocumentoDatos.timestamp = document["timestamp"] as Long
             listaDocumentoDatos.add(DocumentoDatos)
-            posicion += 1
+
         }
         var listaDocumentoDatosOrdenada = ordenarMayorAMenor(listaDocumentoDatos)
+            for (documento in listaDocumentoDatosOrdenada){
+                documento.posicion = posicion
+                posicion += 1
+            }
+
+
+
+
+
+
+
         return listaDocumentoDatosOrdenada
     }
 

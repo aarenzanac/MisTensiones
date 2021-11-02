@@ -12,21 +12,27 @@ import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.historial_activity.*
-import kotlinx.android.synthetic.main.principal_modificacion_activity.*
+import java.sql.Timestamp
 
 class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClickListener {
 
     private val database = FirebaseFirestore.getInstance()
     private lateinit var datosRecyclerview: RecyclerView
     private lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
-    private var posicionItem = 0
+    var diaInicio = 0
+    var mesInicio = 0
+    var añoInicio = 0
+    var diaFinal = 0
+    var mesFinal = 0
+    var añoFinal = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.historial_activity)
-        editTextDateHistorial.setInputType(InputType.TYPE_NULL);
+        editTextDateHistorialInicio.setInputType(InputType.TYPE_NULL);
+        editTextDateHistorialFinal.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
         datosRecyclerview = findViewById(R.id.listaDatosHistorial)
         datosRecyclerview.setHasFixedSize(true)
@@ -52,11 +58,15 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
     private fun setup(email: String){
 
 
-        editTextDateHistorial.setOnClickListener {
-            val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
+        editTextDateHistorialInicio.setOnClickListener {
+            val datePicker = DatePickerFragment { day, month, year -> onDateSelectedInicio(day, month, year) }
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
+        editTextDateHistorialFinal.setOnClickListener {
+            val datePicker = DatePickerFragment { day, month, year -> onDateSelectedFinal(day, month, year) }
+            datePicker.show(supportFragmentManager, "datePicker")
+        }
 
         imageButtonVolverHistorial.setOnClickListener {
            onBackPressed()
@@ -70,9 +80,21 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
     }
 
     //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
-    private fun onDateSelected(day: Int, month: Int, year: Int) {
+    private fun onDateSelectedInicio(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
-        editTextDateModificacion.setText("$day-$month1-$year")
+        editTextDateHistorialInicio.setText("$day-$month1-$year")
+        diaInicio = day.toInt()
+        mesInicio = month.toInt()
+        añoInicio = year.toInt()-1900
+    }
+
+    //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
+    private fun onDateSelectedFinal(day: Int, month: Int, year: Int) {
+        val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
+        editTextDateHistorialFinal.setText("$day-$month1-$year")
+        diaFinal = day.toInt()
+        mesFinal = month.toInt()
+        añoFinal = year.toInt()-1900
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
@@ -97,18 +119,19 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
     private fun filtrar(email: String){
-        if(editTextDateModificacion.text.isNotEmpty()){
+        if(editTextDateHistorialInicio.text.isNotEmpty() && editTextDateHistorialFinal.text.isNotEmpty()){
             val coleccionFechas = database.collection(email)
-            coleccionFechas.whereEqualTo("fecha", editTextDateModificacion.text.toString()).get().addOnSuccessListener {documents ->
+            coleccionFechas.get().addOnSuccessListener {documents ->
                 for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }
                 listaDocumentoDatos = parsearDatos(documents)
+                var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
                 if (listaDocumentoDatos.isEmpty()){
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
                 }else {
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
 
                 }
             }
@@ -157,8 +180,27 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         return listaDocumentoDatos
     }
 
+    private fun aplicarFiltroFechas(ListaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos>{
+        var timestampInicio = crearTimestamp(diaInicio, mesInicio, añoInicio)
+        var timestampFinal = crearTimestamp(diaFinal, mesFinal, añoFinal)
+        var arrayFiltrado = arrayListOf<DocumentoDatos>()
+        for(doc in listaDocumentoDatos){
+            if(doc.timestamp >= timestampInicio && doc.timestamp <= timestampFinal){
+                arrayFiltrado.add(doc)
+            }
+        }
+
+        return arrayFiltrado
+    }
+
     override fun onItemClick(item: DocumentoDatos) {
         TODO("Not yet implemented")
+    }
+
+    private fun crearTimestamp(dia: Int, mes: Int, año: Int): Long{
+        var timestamp = Timestamp(año, mes, dia, 0, 0, 0, 0)
+        var milisegundos: Long = timestamp.toInstant().toEpochMilli()
+        return milisegundos
     }
 
 }

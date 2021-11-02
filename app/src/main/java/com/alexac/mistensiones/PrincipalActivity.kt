@@ -146,8 +146,6 @@ class PrincipalActivity : AppCompatActivity() {
         var timestamp = Timestamp(año, mes, dia, hora, minutos, segundos, nanosegundos)
         var milisegundos: Long = timestamp.toInstant().toEpochMilli()
         return milisegundos
-
-
     }
 
     private fun limpiarCampos(){
