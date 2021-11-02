@@ -194,7 +194,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
     }
 
     override fun onItemClick(item: DocumentoDatos) {
-        TODO("Not yet implemented")
+
     }
 
     private fun crearTimestamp(dia: Int, mes: Int, año: Int): Long{

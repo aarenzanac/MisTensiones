@@ -1,6 +1,11 @@
 package com.alexac.mistensiones.recyclerView
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
+import android.graphics.drawable.shapes.Shape
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +52,13 @@ class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, p
             itemView.textViewRecyclerPeso.text = item.peso.toString()
             itemView.textViewRecyclerGlucemia.text = item.glucosa.toString()
             itemView.textViewRecyclerObservaciones.text = item.observaciones
+            if(item.sistolica.toDouble() >=180 || item.diastolica.toDouble() >= 90.0){
+                itemView.textViewSemaforo.setBackgroundColor(Color.parseColor("#E14336"))
+            }else if(item.sistolica.toDouble() <= 140.0 && item.diastolica.toDouble() <= 70.0){
+                itemView.textViewSemaforo.setBackgroundColor(Color.parseColor("#95D328"))
+            }else{
+                itemView.textViewSemaforo.setBackgroundColor(Color.parseColor("#E1BD36"))
+            }
             val timestamp = item.timestamp
             val posicion = position
         }
