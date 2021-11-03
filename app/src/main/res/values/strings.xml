@@ -51,5 +51,6 @@
     <string name="historial">HISTORIAL</string>
     <string name="text">Text</string>
     <string name="textview">TextView</string>
+    <string name="grafica">GRAFICA</string>
 
 </resources>
