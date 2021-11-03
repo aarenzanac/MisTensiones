@@ -171,7 +171,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -183,6 +183,190 @@
                     android:gravity="start|top"
                     android:hint="@string/observaciones"
                     android:inputType="textMultiLine" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewUltimaEntrada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/fecha"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textviewFechaUltimaEntrada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/textview" />
+
+                            <TextView
+                                android:id="@+id/textView6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="Hora:"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewHoraUltimaEntrada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/textview" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/sist_lica_mmhg"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewSistolicaUltimaEntrada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/textview" />
+
+                            <TextView
+                                android:id="@+id/textView10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/diast_lica_mmhg"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewDiastolicaUltimaEntrada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/textview" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textView12"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/peso_kg"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewPesoUltimaEntrada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/textview" />
+
+                            <TextView
+                                android:id="@+id/textView3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/glucemia_mg_dl"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewGlucemiaUltimaEntrada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/textview" />
+
+                            <TextView
+                                android:id="@+id/textView13"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/oxigenacion"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewOxigenacionUltimaEntrada"
+                                android:layout_width="38dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/text" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textViewObservacionesUltimaEntrada"
+                                android:layout_width="277dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="6dp"
+                                android:ems="10"
+                                android:gravity="start|top"
+                                android:inputType="textMultiLine" />
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/textViewSemaforoUltimaEntrada"
+                                    android:layout_width="19dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="18dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="18dp"
+                                    android:layout_marginBottom="10dp" />
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
         </LinearLayout>

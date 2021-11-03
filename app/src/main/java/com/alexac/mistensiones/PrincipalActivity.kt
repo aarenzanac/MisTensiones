@@ -1,21 +1,24 @@
 package com.alexac.mistensiones
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.fecha_hora.TimePickerFragment
+import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.principal_activity.*
-import java.sql.Timestamp
 
 
 class PrincipalActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
+    val funcionesVarias: FuncionesVarias = FuncionesVarias()
+    private var listaDocumentoDatos: ArrayList<DocumentoDatos> = arrayListOf<DocumentoDatos>()
     var dia = 0
     var mes = 0
     var año = 0
@@ -31,6 +34,7 @@ class PrincipalActivity : AppCompatActivity() {
         editTextDate.setInputType(InputType.TYPE_NULL);
         editTextTime.setInputType(InputType.TYPE_NULL);
 
+
         val bundle = intent.extras
         val email = bundle?.getString("email")
 
@@ -38,12 +42,18 @@ class PrincipalActivity : AppCompatActivity() {
             database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
                 textViewNombreLogueado.setText(it.get("nombre") as String?)
             }
+            //mostrarTodo(email)
+            //cargarUltimaEntrada(listaDocumentoDatos)
             setup(email)
+
         }
 
     }
 
     private fun setup(email: String){
+
+
+
 
         imageButtonModificarDatosInicio.setOnClickListener {
             val pantallaModificarDatosIntent = Intent(
@@ -120,7 +130,7 @@ class PrincipalActivity : AppCompatActivity() {
             if(edit_text_oxigenacion.text.isEmpty()){
                 edit_text_oxigenacion.setText("0")
             }
-            var timestamp: Long = crearTimestamp(dia, mes, año, hora, minutos, segundos, nanosegundos)
+            var timestamp: Long = funcionesVarias.crearTimestampCompleto(dia, mes, año, hora, minutos, segundos, nanosegundos)
             database.collection(email.toString()).document(editTextDate.text.toString() + "-" + editTextTime.text.toString()).set(
                 hashMapOf(
                     "fecha" to editTextDate.text.toString(),
@@ -142,10 +152,22 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
-    private fun crearTimestamp(dia: Int, mes: Int, año: Int, horas: Int, minutos: Int, segundos: Int, nanosegundos: Int): Long{
-        var timestamp = Timestamp(año, mes, dia, hora, minutos, segundos, nanosegundos)
-        var milisegundos: Long = timestamp.toInstant().toEpochMilli()
-        return milisegundos
+    private fun cargarUltimaEntrada(listaDocumentoDatos: ArrayList<DocumentoDatos>) {
+
+        textviewFechaUltimaEntrada.setText(listaDocumentoDatos[0].fecha)
+               textViewHoraUltimaEntrada.setText(listaDocumentoDatos[0].hora)
+        textViewSistolicaUltimaEntrada.setText(listaDocumentoDatos[0].sistolica.toString())
+        textViewDiastolicaUltimaEntrada.setText(listaDocumentoDatos[0].diastolica.toString())
+        textViewPesoUltimaEntrada.setText(listaDocumentoDatos[0].peso.toString())
+        textViewOxigenacionUltimaEntrada.setText(listaDocumentoDatos[0].oxigenacion.toString())
+        textViewGlucemiaUltimaEntrada.setText(listaDocumentoDatos[0].glucosa.toString())
+        if(listaDocumentoDatos[0].sistolica >=180 || listaDocumentoDatos[0].diastolica >= 90.0){
+            textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E14336"))
+        }else if(listaDocumentoDatos[0].sistolica <= 140.0 && listaDocumentoDatos[0].diastolica <= 70.0){
+            textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#95D328"))
+        }else{
+            textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E1BD36"))
+        }
     }
 
     private fun limpiarCampos(){
@@ -159,4 +181,12 @@ class PrincipalActivity : AppCompatActivity() {
         editTextObservaciones.text.clear()
     }
 
+    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
+    private fun mostrarTodo(email: String){
+
+        val coleccion = database.collection(email)
+        coleccion.get().addOnSuccessListener { documents ->
+            listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+        }
+    }
 }

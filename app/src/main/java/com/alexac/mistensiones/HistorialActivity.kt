@@ -8,14 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
+import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.historial_activity.*
-import java.sql.Timestamp
 
 class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClickListener {
 
+    val funcionesVarias:FuncionesVarias = FuncionesVarias()
     private val database = FirebaseFirestore.getInstance()
     private lateinit var datosRecyclerview: RecyclerView
     private lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
@@ -92,12 +92,12 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
     private fun onDateSelectedFinal(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateHistorialFinal.setText("$day-$month1-$year")
-        diaFinal = day.toInt()
+        diaFinal = day.toInt()+1
         mesFinal = month.toInt()
         añoFinal = year.toInt()-1900
     }
 
-    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
+    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
     private fun mostrarTodo(email: String){
 
         val coleccionFechas = database.collection(email)
@@ -105,7 +105,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
             for (document in documents) {
                 Log.d("Registro", "${document.id} => ${document.data}")
             }
-            listaDocumentoDatos = parsearDatos(documents)
+            listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
             if (listaDocumentoDatos.isEmpty()) {
                 datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
                 Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
@@ -125,7 +125,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                 for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }
-                listaDocumentoDatos = parsearDatos(documents)
+                listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                 var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
                 if (listaDocumentoDatos.isEmpty()){
                     datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
@@ -140,49 +140,9 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         }
     }
 
-    //PARSEA TODOS LAS COLECCIONES CLAVE:VALOR DE FIREBASE A OBJETOS DE LA CLASE DOCUMENTODATOS Y DEVUELVE UN ARRAY CON OBJETOS DE LOS RESULTADOS
-    private fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos>{
-        val listaDocumentoDatos = arrayListOf<DocumentoDatos>()
-        var posicion = 0
-        for (document in documents) {
-            var DocumentoDatos = DocumentoDatos()
-            Log.d("Registro", "${document.id} => ${document.data}")
-            DocumentoDatos.fecha = document["fecha"] as String
-            DocumentoDatos.hora = document["hora"] as String
-            DocumentoDatos.sistolica = document["sistolica"] as Double
-            DocumentoDatos.diastolica = document["diastolica"] as Double
-            DocumentoDatos.peso = document["peso"] as Double
-            DocumentoDatos.oxigenacion = document["oxigenacion"] as Long
-            DocumentoDatos.glucosa = document["glucemia"] as Double
-            DocumentoDatos.observaciones = document["observaciones"] as String
-            DocumentoDatos.posicion = posicion
-            DocumentoDatos.timestamp = document["timestamp"] as Long
-            listaDocumentoDatos.add(DocumentoDatos)
-            posicion += 1
-        }
-        var listaDocumentoDatosOrdenada = ordenarMayorAMenor(listaDocumentoDatos)
-        return listaDocumentoDatosOrdenada
-    }
-
-    //ORDENA LOS DOCUMENTOS OBTENIDOS DE MAYOR A MENOR TIMESTAMP, ES DECIR, PRIMERO LOS MAS RECIENTES
-    private fun ordenarMayorAMenor(listaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos> {
-        var temp: DocumentoDatos
-        for (x in 0 until listaDocumentoDatos.size){
-            for(y in 0 until listaDocumentoDatos.size){
-                if(listaDocumentoDatos[x].timestamp > listaDocumentoDatos[y].timestamp){
-                    temp = listaDocumentoDatos[x]
-                    listaDocumentoDatos[x] = listaDocumentoDatos[y]
-                    listaDocumentoDatos[y] = temp
-                }
-            }
-        }
-
-        return listaDocumentoDatos
-    }
-
     private fun aplicarFiltroFechas(ListaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos>{
-        var timestampInicio = crearTimestamp(diaInicio, mesInicio, añoInicio)
-        var timestampFinal = crearTimestamp(diaFinal, mesFinal, añoFinal)
+        var timestampInicio = funcionesVarias.crearTimestamp(diaInicio, mesInicio, añoInicio)
+        var timestampFinal = funcionesVarias.crearTimestamp(diaFinal, mesFinal, añoFinal)
         var arrayFiltrado = arrayListOf<DocumentoDatos>()
         for(doc in listaDocumentoDatos){
             if(doc.timestamp >= timestampInicio && doc.timestamp <= timestampFinal){
@@ -195,12 +155,6 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
 
     override fun onItemClick(item: DocumentoDatos) {
 
-    }
-
-    private fun crearTimestamp(dia: Int, mes: Int, año: Int): Long{
-        var timestamp = Timestamp(año, mes, dia, 0, 0, 0, 0)
-        var milisegundos: Long = timestamp.toInstant().toEpochMilli()
-        return milisegundos
     }
 
 }

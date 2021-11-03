@@ -8,14 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
+import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.principal_modificacion_activity.*
 
 class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClickListener {
 
     private val database = FirebaseFirestore.getInstance()
+    val funcionesVarias: FuncionesVarias = FuncionesVarias()
     private lateinit var datosRecyclerview: RecyclerView
     private lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
     private var posicionItem = 0
@@ -131,7 +132,7 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
                 for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }
-                listaDocumentoDatos = parsearDatos(documents)
+                listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                 if (listaDocumentoDatos.isEmpty()){
                     datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
@@ -145,56 +146,7 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         }
     }
 
-    //PARSEA TODOS LAS COLECCIONES CLAVE:VALOR DE FIREBASE A OBJETOS DE LA CLASE DOCUMENTODATOS Y DEVUELVE UN ARRAY CON OBJETOS DE LOS RESULTADOS
-    private fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos>{
-        val listaDocumentoDatos = arrayListOf<DocumentoDatos>()
-        var posicion = 0
-        for (document in documents) {
-            var DocumentoDatos = DocumentoDatos()
-            Log.d("Registro", "${document.id} => ${document.data}")
-            DocumentoDatos.fecha = document["fecha"] as String
-            DocumentoDatos.hora = document["hora"] as String
-            DocumentoDatos.sistolica = document["sistolica"] as Double
-            DocumentoDatos.diastolica = document["diastolica"] as Double
-            DocumentoDatos.peso = document["peso"] as Double
-            DocumentoDatos.oxigenacion = document["oxigenacion"] as Long
-            DocumentoDatos.glucosa = document["glucemia"] as Double
-            DocumentoDatos.observaciones = document["observaciones"] as String
-            DocumentoDatos.posicion = posicion
-            DocumentoDatos.timestamp = document["timestamp"] as Long
-            listaDocumentoDatos.add(DocumentoDatos)
 
-        }
-        var listaDocumentoDatosOrdenada = ordenarMayorAMenor(listaDocumentoDatos)
-            for (documento in listaDocumentoDatosOrdenada){
-                documento.posicion = posicion
-                posicion += 1
-            }
-
-
-
-
-
-
-
-        return listaDocumentoDatosOrdenada
-    }
-
-    //ORDENA LOS DOCUMENTOS OBTENIDOS DE MAYOR A MENOR TIMESTAMP, ES DECIR, PRIMERO LOS MAS RECIENTES
-    private fun ordenarMayorAMenor(listaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos> {
-        var temp: DocumentoDatos
-        for (x in 0 until listaDocumentoDatos.size){
-            for(y in 0 until listaDocumentoDatos.size){
-                if(listaDocumentoDatos[x].timestamp > listaDocumentoDatos[y].timestamp){
-                    temp = listaDocumentoDatos[x]
-                    listaDocumentoDatos[x] = listaDocumentoDatos[y]
-                    listaDocumentoDatos[y] = temp
-                }
-            }
-        }
-
-        return listaDocumentoDatos
-    }
     //LIMPIA TODOS LOS CAMPOS
     private fun limpiarCampos(){
         edit_text_sistolica_modificaion.text.clear()
