@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
@@ -11,6 +12,7 @@ import com.alexac.mistensiones.fecha_hora.TimePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.principal_activity.*
 
 
@@ -18,7 +20,7 @@ class PrincipalActivity : AppCompatActivity() {
 
     private val database = FirebaseFirestore.getInstance()
     val funcionesVarias: FuncionesVarias = FuncionesVarias()
-    private var listaDocumentoDatos: ArrayList<DocumentoDatos> = arrayListOf<DocumentoDatos>()
+    private lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
     var dia = 0
     var mes = 0
     var año = 0
@@ -27,12 +29,16 @@ class PrincipalActivity : AppCompatActivity() {
     var segundos = 0
     var nanosegundos = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_activity)
         editTextDate.setInputType(InputType.TYPE_NULL);
         editTextTime.setInputType(InputType.TYPE_NULL);
+        var documento: DocumentoDatos = DocumentoDatos()
+        listaDocumentoDatos = arrayListOf<DocumentoDatos>()
+        listaDocumentoDatos.add(documento)
 
 
         val bundle = intent.extras
@@ -41,10 +47,9 @@ class PrincipalActivity : AppCompatActivity() {
         if (email != null) {
             database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener{
                 textViewNombreLogueado.setText(it.get("nombre") as String?)
+                mostrarTodo(email)
             }
-            //mostrarTodo(email)
-            //cargarUltimaEntrada(listaDocumentoDatos)
-            setup(email)
+
 
         }
 
@@ -52,8 +57,7 @@ class PrincipalActivity : AppCompatActivity() {
 
     private fun setup(email: String){
 
-
-
+        cargarUltimaEntrada(listaDocumentoDatos[0])
 
         imageButtonModificarDatosInicio.setOnClickListener {
             val pantallaModificarDatosIntent = Intent(
@@ -103,9 +107,9 @@ class PrincipalActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signOut()
             startActivity(pantallaPrincipalIntent)
         }
-
-
     }
+
+
     private fun onDateSelected(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDate.setText("$day-$month1-$year")
@@ -145,28 +149,52 @@ class PrincipalActivity : AppCompatActivity() {
                 )
             )
             Toast.makeText(this, "REGISTRO AÑADIDO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+            var ultimoDocumento: DocumentoDatos = DocumentoDatos()
+            ultimoDocumento.fecha = editTextDate.text.toString()
+            ultimoDocumento.hora = editTextTime.text.toString()
+            ultimoDocumento.sistolica = edit_text_sistolica.text.toString().toDouble()
+            ultimoDocumento.diastolica = edit_text_diastolica.text.toString().toDouble()
+            ultimoDocumento.peso = edit_text_peso.text.toString().toDouble()
+            ultimoDocumento.oxigenacion = edit_text_oxigenacion.text.toString().toLong()
+            ultimoDocumento.observaciones = editTextObservaciones.text.toString()
+            ultimoDocumento.glucosa = editTextGlucemia.text.toString().toDouble()
+            cargarUltimaEntrada(ultimoDocumento)
             limpiarCampos()
 
         }else{
             Toast.makeText(this, "COMPLETE LOS DATOS, POR FAVOR.", Toast.LENGTH_SHORT).show()
         }
+
     }
 
-    private fun cargarUltimaEntrada(listaDocumentoDatos: ArrayList<DocumentoDatos>) {
+    private fun cargarUltimaEntrada(ultimoDocumento: DocumentoDatos) {
 
-        textviewFechaUltimaEntrada.setText(listaDocumentoDatos[0].fecha)
-               textViewHoraUltimaEntrada.setText(listaDocumentoDatos[0].hora)
-        textViewSistolicaUltimaEntrada.setText(listaDocumentoDatos[0].sistolica.toString())
-        textViewDiastolicaUltimaEntrada.setText(listaDocumentoDatos[0].diastolica.toString())
-        textViewPesoUltimaEntrada.setText(listaDocumentoDatos[0].peso.toString())
-        textViewOxigenacionUltimaEntrada.setText(listaDocumentoDatos[0].oxigenacion.toString())
-        textViewGlucemiaUltimaEntrada.setText(listaDocumentoDatos[0].glucosa.toString())
-        if(listaDocumentoDatos[0].sistolica >=180 || listaDocumentoDatos[0].diastolica >= 90.0){
+        textviewFechaUltimaEntrada.setText(ultimoDocumento.fecha)
+        textViewHoraUltimaEntrada.setText(ultimoDocumento.hora)
+        textViewSistolicaUltimaEntrada.setText(ultimoDocumento.sistolica.toString())
+        textViewDiastolicaUltimaEntrada.setText(ultimoDocumento.diastolica.toString())
+        textViewPesoUltimaEntrada.setText(ultimoDocumento.peso.toString())
+        textViewOxigenacionUltimaEntrada.setText(ultimoDocumento.oxigenacion.toString())
+        textViewGlucemiaUltimaEntrada.setText(ultimoDocumento.glucosa.toString())
+        textViewObservacionesUltimaEntrada.setText(ultimoDocumento.observaciones)
+        if(ultimoDocumento.sistolica >=180 || ultimoDocumento.diastolica >= 90.0){
             textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E14336"))
-        }else if(listaDocumentoDatos[0].sistolica <= 140.0 && listaDocumentoDatos[0].diastolica <= 70.0){
+        }else if(ultimoDocumento.sistolica <= 140.0 && ultimoDocumento.diastolica <= 70.0){
             textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#95D328"))
         }else{
             textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E1BD36"))
+        }
+    }
+
+    private fun mostrarTodo(email: String) {
+
+        val coleccionTotal = database.collection(email)
+        coleccionTotal.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d("Registro", "${document.id} => ${document.data}")
+            }
+            listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+            setup(email)
         }
     }
 
@@ -179,14 +207,5 @@ class PrincipalActivity : AppCompatActivity() {
         edit_text_peso.text.clear()
         editTextGlucemia.text.clear()
         editTextObservaciones.text.clear()
-    }
-
-    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
-    private fun mostrarTodo(email: String){
-
-        val coleccion = database.collection(email)
-        coleccion.get().addOnSuccessListener { documents ->
-            listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-        }
     }
 }

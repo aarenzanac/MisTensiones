@@ -10,9 +10,8 @@ class DocumentoDatos {
     var oxigenacion: Long = 0
     var glucosa: Double = 0.0
     var observaciones: String = ""
-    var semaforo: Int = 0x00FF00
     var timestamp: Long = 0
     var posicion: Int = 0
 
-    class DocumentoDatos(fecha: String, hora: String, sistolica: Double, diastolica: Double, peso: Double, oxigenacion: Long, glucosa: Double, observaciones: String, semaforo: Int, timestamp: Long, posicion: Int)
+    class DocumentoDatos(fecha: String, hora: String, sistolica: Double, diastolica: Double, peso: Double, oxigenacion: Long, glucosa: Double, observaciones: String, timestamp: Long, posicion: Int)
 }

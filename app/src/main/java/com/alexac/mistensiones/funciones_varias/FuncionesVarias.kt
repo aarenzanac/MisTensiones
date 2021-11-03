@@ -59,7 +59,7 @@ class FuncionesVarias {
     }
 
     fun crearTimestampCompleto(dia: Int, mes: Int, año: Int, hora: Int, minutos: Int, segundos: Int, nanosegundos: Int): Long{
-        var timestamp = Timestamp(año, mes, dia, 0, 0, 0, 0)
+        var timestamp = Timestamp(año, mes, dia, hora, minutos, segundos, 0)
         var milisegundos: Long = timestamp.toInstant().toEpochMilli()
         return milisegundos
     }

@@ -151,9 +151,9 @@
                     android:ems="10"
                     android:gravity="center_horizontal|center_vertical"
                     android:hint="@string/glucemia_mg_dl"
+                    android:importantForAutofill="no"
                     android:inputType="numberDecimal"
-                    android:textSize="18sp"
-                    android:importantForAutofill="no" />
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/edit_text_peso"
@@ -183,6 +183,15 @@
                     android:gravity="start|top"
                     android:hint="@string/observaciones"
                     android:inputType="textMultiLine" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="ULTIMA ENTRADA" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewUltimaEntrada"
@@ -239,6 +248,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
                             <TextView
@@ -279,7 +289,8 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
 
                             <TextView
                                 android:id="@+id/textView12"
@@ -337,7 +348,8 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
 
                             <TextView
                                 android:id="@+id/textViewObservacionesUltimaEntrada"
