@@ -31,6 +31,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/textViewNombreLogueadoGrafica"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/nombrelogueado"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_historial" />
+
         <LinearLayout
             android:id="@+id/layoutFechaHora"
             android:layout_width="match_parent"
@@ -82,7 +91,7 @@
                 android:textSize="18sp" />
 
             <ImageView
-                android:id="@+id/imageViewFiltrarHistorial"
+                android:id="@+id/imageViewFiltrarGrafica"
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -94,7 +103,21 @@
         <lecho.lib.hellocharts.view.LineChartView
             android:id="@+id/chart"
             android:layout_width="match_parent"
-            android:layout_height="559dp" />
+            android:layout_height="593dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/imageButtonVolverGrafica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:contentDescription="@string/botonvolver"
+                app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
+        </LinearLayout>
     </LinearLayout>
 
 
