@@ -47,18 +47,18 @@ class DatosInicioActivity : AppCompatActivity() {
                                     "sexo" to sexo
                                     )
                             )
-                            /*database.collection(email).document(fechaActual.toString()).set(
+                            database.collection(email).document(fechaActual.toString()).set(
                                     hashMapOf("fecha" to "",
                                     "hora" to "",
-                                    "sistolica" to "",
-                                    "diastolica" to "",
-                                    "oxigenacion" to "",
-                                    "peso" to "",
-                                    "glucemia" to "",
-                                    "observaciones" to ""
+                                    "sistolica" to 0.0,
+                                    "diastolica" to 0.0,
+                                    "oxigenacion" to 0,
+                                    "peso" to 0.0,
+                                    "glucemia" to 0.0,
+                                    "observaciones" to "",
+                                    "timestamp" to 0
                                 )
-                            )*/
-                            //goPrincipalActivity(email, edit_text_nombre.text.toString(), edit_text_edad.text.toString().toInt(), edit_text_altura.text.toString().toInt())
+                            )
                             goPrincipalActivity(email)
                         }else{
                             Toast.makeText(this, "SELECCIONE UN GÉNERO, POR FAVOR.", Toast.LENGTH_SHORT).show()
@@ -85,9 +85,4 @@ class DatosInicioActivity : AppCompatActivity() {
 
         startActivity(pantallaPrincipalIntent)
     }
-    private fun mostrarError(){
-        Toast.makeText(this, "DEBE COMPLETAR TODOS LOS CAMPOS, REVISE LOS DATOS.", Toast.LENGTH_SHORT).show()
-    }
-
-
 }
