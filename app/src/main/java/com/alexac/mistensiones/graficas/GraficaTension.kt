@@ -25,6 +25,7 @@ class GraficaTension: AppCompatActivity(){
         setContentView(R.layout.grafica)
         editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
         editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
+        /// mensaje de prueba para firestore functions commit
 
 
         val bundle = intent.extras
