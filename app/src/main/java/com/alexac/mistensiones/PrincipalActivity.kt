@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.fecha_hora.TimePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
+import com.alexac.mistensiones.models.DocumentoDatos
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.principal_activity.*
 
 
@@ -28,6 +28,7 @@ class PrincipalActivity : AppCompatActivity() {
     var minutos = 0
     var segundos = 0
     var nanosegundos = 0
+    var contadorWarnings: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,11 +160,19 @@ class PrincipalActivity : AppCompatActivity() {
             ultimoDocumento.observaciones = editTextObservaciones.text.toString()
             ultimoDocumento.glucosa = editTextGlucemia.text.toString().toDouble()
             cargarUltimaEntrada(ultimoDocumento)
-            limpiarCampos()
+            if(ultimoDocumento.sistolica >= 160.0 || ultimoDocumento.diastolica >= 90.0){
+                contadorWarnings += 1
+            }
+            if(contadorWarnings >= 3){
 
+                funcionesVarias.extraerAlimentos(this)
+            }
+            limpiarCampos()
         }else{
             Toast.makeText(this, "COMPLETE LOS DATOS, POR FAVOR.", Toast.LENGTH_SHORT).show()
         }
+
+
 
     }
 
@@ -208,4 +217,14 @@ class PrincipalActivity : AppCompatActivity() {
         editTextGlucemia.text.clear()
         editTextObservaciones.text.clear()
     }
+
+    /*private fun llamarCloudFunctionSubidaDatos(){
+        cloudFunctions.getHttpsCallable("subirDatos").call()
+                .addOnFailureListener {
+                    Log.wtf("Error en la llamada de subir datos. ", it)
+                }
+                .addOnSuccessListener {
+                    Toast.makeText(this, "exito en la llamada de la funcion en la nube.", Toast.LENGTH_SHORT).show()
+                }
+    }*/
 }

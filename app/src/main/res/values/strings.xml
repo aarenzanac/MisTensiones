@@ -52,5 +52,7 @@
     <string name="text">Text</string>
     <string name="textview">TextView</string>
     <string name="grafica">GRAFICA</string>
-
+    <string name="ok">OK</string>
+    <string name="precaucion">PRECAUCIÓN</string>
+    <string name="mensaje_warning">"Hemos detectado que las 3 últimas tensiones introducidas, están por encima de lo normal con el consiguiente riesgo cardiovascular para su salud. A continuación le detallamos algúnos alimentos con cualidades para mejorar la salud. \n"</string>
 </resources>

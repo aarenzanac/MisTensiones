@@ -1,11 +1,21 @@
 package com.alexac.mistensiones.funciones_varias
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
+import android.content.res.Resources
+import android.provider.Settings.Global.getString
 import android.util.Log
-import com.alexac.mistensiones.DocumentoDatos
+import com.alexac.mistensiones.models.DocumentoDatos
+import com.alexac.mistensiones.R
+import com.alexac.mistensiones.models.Alimentos
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import java.sql.Timestamp
 
 class FuncionesVarias {
+
+    private val database = FirebaseFirestore.getInstance()
 
     //PARSEA TODOS LAS COLECCIONES CLAVE:VALOR DE FIREBASE A OBJETOS DE LA CLASE DOCUMENTODATOS Y DEVUELVE UN ARRAY CON OBJETOS DE LOS RESULTADOS
     fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos>{
@@ -64,5 +74,47 @@ class FuncionesVarias {
         return milisegundos
     }
 
+    fun mostrarDialogoWarning(context: Context, textoAlimentos: String){
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle(R.string.precaucion)
+        builder.setMessage(R.string.mensaje_warning)
+        builder.setPositiveButton(R.string.ok, {dialogInterface: DialogInterface, i: Int -> dialogInterface.cancel()})
+        builder.show()
+    }
+
+    fun extraerAlimentos(context: Context): ArrayList<Alimentos>{
+        var listaAlimentos: ArrayList<Alimentos> = arrayListOf<Alimentos>()
+        val coleccionAlimentos = database.collection("comidaSana")
+        coleccionAlimentos.get().addOnSuccessListener { alimentos ->
+            for (alimento in alimentos) {
+                Log.d("Registro", "${alimento.id} => ${alimento.data}")
+            }
+            listaAlimentos = parsearAlimentos(alimentos)
+
+            mostrarDialogoWarning(context, crearAlimentosWarning(listaAlimentos))
+        }
+
+        return listaAlimentos
+    }
+
+    fun parsearAlimentos(alimentos: QuerySnapshot): ArrayList<Alimentos> {
+        val listaAlimentos = arrayListOf<Alimentos>()
+        for (alimento in alimentos) {
+            var alimentoNuevo = Alimentos()
+            alimentoNuevo.nombre = alimento["nombre"] as String
+            alimentoNuevo.propiedades = alimento["Propiedades"] as String
+            listaAlimentos.add(alimentoNuevo)
+        }
+        return listaAlimentos
+    }
+
+    fun crearAlimentosWarning(listaAlimentos: ArrayList<Alimentos>): String{
+        var textoAlimentosWarning = ""
+        for (alimento in listaAlimentos){
+            textoAlimentosWarning =textoAlimentosWarning + alimento.nombre + ": " + alimento.propiedades + "\n"
+        }
+        return textoAlimentosWarning
+    }
 
 }

@@ -2,15 +2,11 @@ package com.alexac.mistensiones.recyclerView
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
-import android.graphics.drawable.shapes.Shape
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.alexac.mistensiones.DocumentoDatos
+import com.alexac.mistensiones.models.DocumentoDatos
 import com.alexac.mistensiones.R
 import kotlinx.android.synthetic.main.datos_item.view.*
 

@@ -1,7 +1,6 @@
-package com.alexac.mistensiones
+package com.alexac.mistensiones.models
 
 class DocumentoDatos {
-    lateinit var listadoDocumentos: ArrayList<DocumentoDatos>
     var fecha: String = ""
     var hora: String = ""
     var sistolica: Double = 0.0

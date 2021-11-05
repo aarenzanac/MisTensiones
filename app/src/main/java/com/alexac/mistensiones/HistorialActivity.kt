@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
+import com.alexac.mistensiones.models.DocumentoDatos
 import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.historial_activity.*
