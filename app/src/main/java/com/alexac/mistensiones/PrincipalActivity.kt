@@ -30,7 +30,7 @@ class PrincipalActivity : AppCompatActivity() {
     var minutos = 0
     var segundos = 0
     var nanosegundos = 0
-    var contadorWarnings: Int = 0
+    var contadorWarningsTension: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +39,9 @@ class PrincipalActivity : AppCompatActivity() {
         setContentView(R.layout.principal_activity)
         editTextDate.setInputType(InputType.TYPE_NULL);
         editTextTime.setInputType(InputType.TYPE_NULL);
-        var documento: DocumentoDatos = DocumentoDatos()
+        //var documento: DocumentoDatos = DocumentoDatos()
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
-        listaDocumentoDatos.add(documento)
+        //listaDocumentoDatos.add(documento)
 
 
         val bundle = intent.extras
@@ -57,8 +57,12 @@ class PrincipalActivity : AppCompatActivity() {
 
 
     private fun setup(email: String){
+        if(listaDocumentoDatos.isNotEmpty()){
+            cargarUltimaEntrada(listaDocumentoDatos[0])
+        }else{
+            limpiarcamposUltimaEntrada()
+        }
 
-        cargarUltimaEntrada(listaDocumentoDatos[0])
 
         imageButtonModificarDatosInicio.setOnClickListener {
             val pantallaModificarDatosIntent = Intent(
@@ -176,18 +180,18 @@ class PrincipalActivity : AppCompatActivity() {
             if(preferenciasCompartidas.recuperarPrefenenciaTension() == true){
                 //SI LAS TENSIONES SON ALTAS SUMA UNO AL CONTADOR DE 3 MAXIMO
                 if(ultimoDocumento.sistolica >= 150.0 || ultimoDocumento.diastolica >= 90.0){
-                    contadorWarnings += 1
+                    contadorWarningsTension += 1
                 }else{
-                    contadorWarnings = 0
+                    contadorWarningsTension = 0
                 }
             }else{
-                contadorWarnings = 0
+                contadorWarningsTension = 0
             }
 
             //SI SE INTRODUCEN 3 TENSIONES ALTAS SEGUIDAS, MUESTRA ALERTDIALOG CON SUGERENCIA
-            if(contadorWarnings >= 1){
+            if(contadorWarningsTension >= 1){
                 funcionesVarias.extraerAlimentos(this)
-                contadorWarnings = 0
+                contadorWarningsTension = 0
             }
             limpiarCampos()
         }else{
@@ -214,8 +218,10 @@ class PrincipalActivity : AppCompatActivity() {
         }else{
             textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E1BD36"))
         }
-        val altura: Int = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura()
-        val imc = ultimoDocumento.peso / ((altura/100)*(altura/100))
+        val altura: Double = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura().toDouble()
+        var imc = ultimoDocumento.peso / Math.pow((altura/100), 2.0)
+        var imcDosDecimales: Double = (((imc*100).toInt()).toDouble())/100
+        textViewImcUltimaEntrada.text = imcDosDecimales.toString()
         if(imc >= 27){
             textViewSemaforoIMCUltimaEntrada.setBackgroundColor(Color.parseColor("#E14336"))
         }else if(imc <= 19){
@@ -250,5 +256,18 @@ class PrincipalActivity : AppCompatActivity() {
         edit_text_peso.text.clear()
         editTextGlucemia.text.clear()
         editTextObservaciones.text.clear()
+    }
+
+
+    //LIMPIA LOS CAMPOS DEL CARDVIEW DE ULTIMA ENTRADA CUANDO EL USUARIO ES NUEVO
+    private fun limpiarcamposUltimaEntrada(){
+        textviewFechaUltimaEntrada.setText("")
+        textViewHoraUltimaEntrada.setText("")
+        textViewSistolicaUltimaEntrada.setText("")
+        textViewDiastolicaUltimaEntrada.setText("")
+        textViewPesoUltimaEntrada.setText("")
+        textViewGlucemiaUltimaEntrada.setText("")
+        textViewOxigenacionUltimaEntrada.setText("")
+        textViewImcUltimaEntrada.setText("")
     }
 }

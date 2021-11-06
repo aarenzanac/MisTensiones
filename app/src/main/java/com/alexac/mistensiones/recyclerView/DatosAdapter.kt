@@ -56,8 +56,10 @@ class DatosAdapter(private val listaDocumentoDatos: ArrayList<DocumentoDatos>, p
             }else{
                 itemView.textViewSemaforo.setBackgroundColor(Color.parseColor("#E1BD36"))
             }
-            val altura: Int = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura()
-            val imc = item.peso / ((altura/100)*(altura/100))
+            val altura: Double = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura().toDouble()
+            var imc = item.peso / Math.pow((altura/100), 2.0)
+            var imcDosDecimales: Double = (((imc*100).toInt()).toDouble())/100
+            itemView.textViewImc.text = imcDosDecimales.toString()
             if(imc >= 27){
                 itemView.textViewSemaforoIMC.setBackgroundColor(Color.parseColor("#E14336"))
             }else if(imc <= 19){

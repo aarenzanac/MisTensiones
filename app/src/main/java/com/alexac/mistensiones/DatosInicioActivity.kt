@@ -68,7 +68,7 @@ class DatosInicioActivity : AppCompatActivity() {
                         "sexo" to sexo
                 )
         )
-        database.collection(email).document(fechaActual.toString()).set(
+        /*database.collection(email).document(fechaActual.toString()).set(
                 hashMapOf("fecha" to "",
                         "hora" to "",
                         "sistolica" to 0.0,
@@ -79,7 +79,7 @@ class DatosInicioActivity : AppCompatActivity() {
                         "observaciones" to "",
                         "timestamp" to 0
                 )
-        )
+        )*/
         CargarPreferenciasCompartidas.preferenciasCompartidas.guardarPreferenciaAltura(edit_text_altura.text.toString().toInt())
         goPrincipalActivity(email)
     }
