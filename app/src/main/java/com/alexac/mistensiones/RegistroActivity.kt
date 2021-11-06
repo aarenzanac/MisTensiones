@@ -18,6 +18,7 @@ class RegistroActivity : AppCompatActivity() {
         setup()
     }
 
+
     private fun setup(){
         button_modificar_datos.setOnClickListener {
             if (edit_text_email_registro.text.isNotEmpty() && edit_text_password_registro.text.isNotEmpty()){
@@ -33,9 +34,10 @@ class RegistroActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
+
+    //BOTON PARA ACCEDER A LA PANTALLA DE INICIO
     private fun goDatosInicioActivity(email: String, password: String){
         val datosInicioIntent = Intent(this, DatosInicioActivity::class.java).apply {
             putExtra("email", email)
@@ -45,6 +47,7 @@ class RegistroActivity : AppCompatActivity() {
         startActivity(datosInicioIntent)
     }
 
+    //FUNCIÓN PARA HACER MAS AMIGABLE EL ERROR DEVUELTO EN EL REGISTRO POR FIREBASE
     private fun mostrarError(exception: String){
         when(exception) {
             "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted." ->

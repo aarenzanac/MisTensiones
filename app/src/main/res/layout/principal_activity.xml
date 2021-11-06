@@ -42,6 +42,15 @@
             android:layout_height="45dp"
             android:orientation="horizontal">
 
+            <ImageButton
+                android:id="@+id/imageButtonModificarOpciones"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_modificar_datos_inicio"
+                android:foregroundGravity="center_vertical|center"
+                app:srcCompat="@mipmap/ic_toggle_switch_outline_grey600_18dp" />
+
             <TextView
                 android:id="@+id/textViewNombreLogueado"
                 android:layout_width="281dp"
@@ -201,7 +210,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -348,20 +357,20 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp">
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/textViewObservacionesUltimaEntrada"
-                                android:layout_width="277dp"
+                                android:id="@+id/textView17"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginStart="6dp"
-                                android:ems="10"
-                                android:gravity="start|top"
-                                android:inputType="textMultiLine" />
+                                android:layout_marginLeft="6dp"
+                                android:layout_weight="1"
+                                android:gravity="right|center_vertical"
+                                android:text="@string/tensi_n" />
 
                             <FrameLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent">
 
                                 <TextView
@@ -373,6 +382,42 @@
                                     android:layout_marginRight="18dp"
                                     android:layout_marginBottom="10dp" />
                             </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/textView18"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="right|center_vertical"
+                                android:text="IMC" />
+
+                            <FrameLayout
+                                android:layout_width="126dp"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/textViewSemaforoIMCUltimaEntrada"
+                                    android:layout_width="19dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="18dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="18dp"
+                                    android:layout_marginBottom="10dp" />
+                            </FrameLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textViewObservacionesUltimaEntrada"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="6dp"
+                                android:ems="10"
+                                android:gravity="start|top"
+                                android:inputType="textMultiLine" />
 
                         </LinearLayout>
 

@@ -24,8 +24,8 @@ class LoginActivity : AppCompatActivity() {
         analytics.logEvent("InitScreen", bundle)
 
         setup()
-
     }
+
 
     private fun setup() {
         text_view_registrese.setOnClickListener {
@@ -49,6 +49,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+
+    //FUNCION PARA ACCEDER A LA ACTIVIDAD PRINCIPAL EN CASO DE EXISTIR USUARIO REGISTRADO
     private fun goPrincipalActivity(email: String, password: String){
         val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
             putExtra("email", email)
@@ -57,6 +59,8 @@ class LoginActivity : AppCompatActivity() {
         startActivity(pantallaPrincipalIntent)
     }
 
+
+    //FUNCION PARA HACER MAS AMIGABLE EL ERROR DEVUELTO EN EL LOGIN POR FIREBASE
     private fun mostrarError(exception: String){
         when(exception) {
             "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted." ->
@@ -71,7 +75,5 @@ class LoginActivity : AppCompatActivity() {
                     "disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. ]" ->
                 Toast.makeText(this, "Usuario bloqueado. Contacte con el administrador.",Toast.LENGTH_SHORT).show()
         }
-        //Toast.makeText(this, exception, Toast.LENGTH_SHORT).show()
     }
-
 }

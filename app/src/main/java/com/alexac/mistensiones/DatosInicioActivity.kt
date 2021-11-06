@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.datos_inicio_activity.*
 
@@ -23,8 +24,8 @@ class DatosInicioActivity : AppCompatActivity() {
         if (email != null) {
             setup(email)
         }
-
     }
+
 
     private fun setup(email: String) {
 
@@ -33,33 +34,7 @@ class DatosInicioActivity : AppCompatActivity() {
                 if(edit_text_edad.text.isNotEmpty() && edit_text_edad.text.toString().toInt() >= 18 && edit_text_edad.text.toString().toInt() <= 100){
                     if(edit_text_altura.text.isNotEmpty() && edit_text_altura.text.toString().toInt() >= 50 && edit_text_altura.text.toString().toInt() <= 250){
                         if(radio_button_hombre.isChecked || radio_button_mujer.isChecked){
-                            var sexo = ""
-                            if(radio_button_hombre.isChecked){
-                                sexo = "Hombre"
-                            }else{
-                                sexo = "Mujer"
-                            }
-                            database.collection("usuariosRegistrados").document(email).set(
-                                    hashMapOf("email" to email,
-                                    "nombre" to edit_text_nombre.text.toString(),
-                                    "edad" to edit_text_edad.text.toString().toInt(),
-                                    "altura" to edit_text_altura.text.toString().toInt(),
-                                    "sexo" to sexo
-                                    )
-                            )
-                            database.collection(email).document(fechaActual.toString()).set(
-                                    hashMapOf("fecha" to "",
-                                    "hora" to "",
-                                    "sistolica" to 0.0,
-                                    "diastolica" to 0.0,
-                                    "oxigenacion" to 0,
-                                    "peso" to 0.0,
-                                    "glucemia" to 0.0,
-                                    "observaciones" to "",
-                                    "timestamp" to 0
-                                )
-                            )
-                            goPrincipalActivity(email)
+                            modificarDatosUsuario(email)
                         }else{
                             Toast.makeText(this, "SELECCIONE UN GÉNERO, POR FAVOR.", Toast.LENGTH_SHORT).show()
 
@@ -74,15 +49,47 @@ class DatosInicioActivity : AppCompatActivity() {
                 Toast.makeText(this, "DEBE INTRODUCIR UN NOMBRE, POR FAVOR.", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
 
+    //FUNCION PARA MOFICICAR LOS DATOS PERSONALES DEL USUARIO
+    private fun modificarDatosUsuario(email: String){
+        var sexo = ""
+        if(radio_button_hombre.isChecked){
+            sexo = "Hombre"
+        }else{
+            sexo = "Mujer"
+        }
+        database.collection("usuariosRegistrados").document(email).set(
+                hashMapOf("email" to email,
+                        "nombre" to edit_text_nombre.text.toString(),
+                        "edad" to edit_text_edad.text.toString().toInt(),
+                        "altura" to edit_text_altura.text.toString().toInt(),
+                        "sexo" to sexo
+                )
+        )
+        database.collection(email).document(fechaActual.toString()).set(
+                hashMapOf("fecha" to "",
+                        "hora" to "",
+                        "sistolica" to 0.0,
+                        "diastolica" to 0.0,
+                        "oxigenacion" to 0,
+                        "peso" to 0.0,
+                        "glucemia" to 0.0,
+                        "observaciones" to "",
+                        "timestamp" to 0
+                )
+        )
+        CargarPreferenciasCompartidas.preferenciasCompartidas.guardarPreferenciaAltura(edit_text_altura.text.toString().toInt())
+        goPrincipalActivity(email)
+    }
+
+
+    //FUNCION PARA ACCEDER A LA PANTALLA DE INICIO
     private fun goPrincipalActivity(email: String) {
         val pantallaPrincipalIntent = Intent(this, PrincipalActivity::class.java).apply {
             putExtra("email", email)
         }
-
         startActivity(pantallaPrincipalIntent)
     }
 }

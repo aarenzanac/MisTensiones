@@ -11,6 +11,8 @@ class DocumentoDatos {
     var observaciones: String = ""
     var timestamp: Long = 0
     var posicion: Int = 0
+    var imc: Double = 0.0
 
-    class DocumentoDatos(fecha: String, hora: String, sistolica: Double, diastolica: Double, peso: Double, oxigenacion: Long, glucosa: Double, observaciones: String, timestamp: Long, posicion: Int)
+    //CONSTRUCTOR
+    class DocumentoDatos(fecha: String, hora: String, sistolica: Double, diastolica: Double, peso: Double, oxigenacion: Long, glucosa: Double, observaciones: String, timestamp: Long, posicion: Int, imc: Double)
 }

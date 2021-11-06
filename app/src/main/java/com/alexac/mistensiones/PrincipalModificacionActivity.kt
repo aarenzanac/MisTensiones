@@ -48,8 +48,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         }
     }
 
-    private fun setup(email: String){
 
+    private fun setup(email: String){
 
         editTextDateModificacion.setOnClickListener {
             val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
@@ -75,8 +75,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
             limpiarCampos()
             filtrar(email)
         }
-        
     }
+
 
     //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
     private fun onDateSelected(day: Int, month: Int, year: Int) {
@@ -84,6 +84,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         editTextDateModificacion.setText("$day-$month1-$year")
     }
 
+
+    //MODIFICA EL REGISTRO SELECCIONADO Y RECARFA EL RECYCLERVIEW
     private fun modificarRegistro(email: String){
         if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()){
             if(edit_text_glucemia_modificacion.text.isEmpty()){
@@ -114,6 +116,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         }
     }
 
+
+    //ELIMINA EL REGISTRO DE LA BASE DE DATOS Y RECARGA EL RECYCLERVIEW
     fun eliminarRegistro(email: String){
         if(edit_text_sistolica_modificaion.text.isNotEmpty() && edit_text_diastolica_modificacion.text.isNotEmpty() && edit_text_oxigenacion_modificacion.text.isNotEmpty() && edit_text_peso_modificacion.text.isNotEmpty()) {
             database.collection(email.toString()).document(listaDocumentoDatos[posicionItem].fecha+"-"+listaDocumentoDatos[posicionItem].hora).delete()
@@ -124,6 +128,7 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
             Toast.makeText(this, "DEBE SELECCIONAR UN REGISTRO EN EL GRID.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
     private fun filtrar(email: String){
@@ -148,6 +153,7 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
     }
 
 
+
     //LIMPIA TODOS LOS CAMPOS
     private fun limpiarCampos(){
         edit_text_sistolica_modificaion.text.clear()
@@ -157,6 +163,8 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
         edit_text_glucemia_modificacion.text.clear()
         edit_text_observaciones_modificacion.text.clear()
     }
+
+
     //FUNCION SOBEESCRITA DEL ADAPTER QUE SETEA LOS CAMPOS CON LOS DATOS DE LA TARJETA CLICADA
     override fun onItemClick(item: DocumentoDatos) {
         edit_text_sistolica_modificaion.setText(item.sistolica.toString())

@@ -41,9 +41,6 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
 
 
-
-
-
         val bundle = intent.extras
         val email = bundle?.getString("email")
 
@@ -55,6 +52,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
             mostrarTodo(email)
         }
     }
+
 
     private fun setup(email: String){
 
@@ -75,12 +73,10 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
 
         imageViewFiltrarHistorial.setOnClickListener {
             filtrar(email)
-
         }
-        
     }
 
-    //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
+    //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA Y LAS VARIABLES DEL TIMESTAMP
     private fun onDateSelectedInicio(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateHistorialInicio.setText("$day-$month1-$year")
@@ -89,7 +85,8 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         añoInicio = year.toInt()-1900
     }
 
-    //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA
+
+    //SETEA EL EDIT TEXT DE FECHA CON LA FECHA SELECCIONADA Y LAS VARIABLES DEL TIMESTAMP
     private fun onDateSelectedFinal(day: Int, month: Int, year: Int) {
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateHistorialFinal.setText("$day-$month1-$year")
@@ -97,6 +94,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         mesFinal = month.toInt()
         añoFinal = year.toInt()-1900
     }
+
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
     private fun mostrarTodo(email: String){
@@ -112,7 +110,6 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                 Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
             } else {
                 datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
-
             }
         }
     }
@@ -133,7 +130,6 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
                 }else {
                     datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
-
                 }
             }
         }else {
@@ -141,6 +137,8 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         }
     }
 
+
+    //CREA UN ARRAY CON LOS ELEMENTOS COMPRENDIDOS ENTRE EL TIMESTAMP INICIO Y FINAL SELECCIONADO.
     private fun aplicarFiltroFechas(ListaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos>{
         var timestampInicio = funcionesVarias.crearTimestamp(diaInicio, mesInicio, añoInicio)
         var timestampFinal = funcionesVarias.crearTimestamp(diaFinal, mesFinal, añoFinal)
@@ -150,10 +148,11 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                 arrayFiltrado.add(doc)
             }
         }
-
         return arrayFiltrado
     }
 
+
+    //FUNCION HEREDADA ONCLICK. NO SE IMPLEMENTA NADA PORQUE NO ES NECESARIO HACER CLICK EN EL ELEMENTO EN EL HISTORIAL
     override fun onItemClick(item: DocumentoDatos) {
 
     }

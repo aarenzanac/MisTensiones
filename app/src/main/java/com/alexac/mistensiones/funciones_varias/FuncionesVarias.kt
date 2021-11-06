@@ -3,17 +3,18 @@ package com.alexac.mistensiones.funciones_varias
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.res.Resources
-import android.provider.Settings.Global.getString
 import android.util.Log
-import com.alexac.mistensiones.models.DocumentoDatos
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.models.Alimentos
+import com.alexac.mistensiones.models.DocumentoDatos
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import java.sql.Timestamp
 
 class FuncionesVarias {
+
+    var avisoTension: Boolean = true
+    var avisoIMC: Boolean= false
 
     private val database = FirebaseFirestore.getInstance()
 
@@ -45,7 +46,6 @@ class FuncionesVarias {
     }
 
 
-
     //ORDENA LOS DOCUMENTOS OBTENIDOS DE MAYOR A MENOR TIMESTAMP, ES DECIR, PRIMERO LOS MAS RECIENTES
     fun ordenarMayorAMenor(listaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos> {
         var temp: DocumentoDatos
@@ -58,31 +58,38 @@ class FuncionesVarias {
                 }
             }
         }
-
         return listaDocumentoDatos
     }
 
+
+    //FUNCION QUE CREA EL TIMESTAMP EN FUNCION DE LAS VARIABLES SETEADAS POR LOS SELECTORES DE FECHA. UTILIZADO POR EL FILTRO DE FECHAS. UNICAMENTE DE FECHAS
     fun crearTimestamp(dia: Int, mes: Int, año: Int): Long{
         var timestamp = Timestamp(año, mes, dia, 0, 0, 0, 0)
         var milisegundos: Long = timestamp.toInstant().toEpochMilli()
         return milisegundos
     }
 
+
+    //FUNCION QUE CREA EL TIMESTAMP EN FUNCION DE LAS VARIABLES SETEADAS POR LOS SELECTORES DE FECHA Y HORA. UTILIZADO PARA ORDENAR LOS DOCUMENTOS DE DATOS TAMBIEN SI HAY DOS O MAS ENTRADAS EL MISMO DÍA
     fun crearTimestampCompleto(dia: Int, mes: Int, año: Int, hora: Int, minutos: Int, segundos: Int, nanosegundos: Int): Long{
         var timestamp = Timestamp(año, mes, dia, hora, minutos, segundos, 0)
         var milisegundos: Long = timestamp.toInstant().toEpochMilli()
         return milisegundos
     }
 
+
+    //MUESTRA EL DIALOG WARNING
     fun mostrarDialogoWarning(context: Context, textoAlimentos: String){
         val builder = AlertDialog.Builder(context)
 
-        builder.setTitle(R.string.precaucion)
-        builder.setMessage(R.string.mensaje_warning)
+        builder.setTitle(context.getString(R.string.precaucion_medico))
+        builder.setMessage(context.getString(R.string.mensaje_warning) + textoAlimentos)
         builder.setPositiveButton(R.string.ok, {dialogInterface: DialogInterface, i: Int -> dialogInterface.cancel()})
         builder.show()
     }
 
+
+    //FUNCION QUE EXTRAE DE LA BASE DE DATOS LOS ALIMENTOS Y LOS TRANSFORMA EN UN ARRAY DE OBJETOS ALIMENTOS
     fun extraerAlimentos(context: Context): ArrayList<Alimentos>{
         var listaAlimentos: ArrayList<Alimentos> = arrayListOf<Alimentos>()
         val coleccionAlimentos = database.collection("comidaSana")
@@ -94,27 +101,40 @@ class FuncionesVarias {
 
             mostrarDialogoWarning(context, crearAlimentosWarning(listaAlimentos))
         }
-
         return listaAlimentos
     }
 
+
+    //FUNCION QUE PARSEA LA CONSULTA A LA BASE DE DATOS DE ALIMENTOS Y LO PARSEA A OBJETOS DE LA CLASE ALIMENTO. SELECCIONANDO UNICAMENTE 2
     fun parsearAlimentos(alimentos: QuerySnapshot): ArrayList<Alimentos> {
         val listaAlimentos = arrayListOf<Alimentos>()
+        val listaDosAlimentosSeleccionados = arrayListOf<Alimentos>()
+        var randomIndex1 = 0
+        var randomIndex2 = 0
         for (alimento in alimentos) {
             var alimentoNuevo = Alimentos()
             alimentoNuevo.nombre = alimento["nombre"] as String
             alimentoNuevo.propiedades = alimento["Propiedades"] as String
             listaAlimentos.add(alimentoNuevo)
         }
-        return listaAlimentos
+        do{
+            randomIndex1 = (0..listaAlimentos.size-1).random()
+            randomIndex2 = (0..listaAlimentos.size-1).random()
+        }while (randomIndex1 == randomIndex2)
+
+        listaDosAlimentosSeleccionados.add(listaAlimentos[randomIndex1])
+        listaDosAlimentosSeleccionados.add(listaAlimentos[randomIndex2])
+
+        return listaDosAlimentosSeleccionados
     }
 
-    fun crearAlimentosWarning(listaAlimentos: ArrayList<Alimentos>): String{
+
+    //FUNCION QUE CREA UN STRING CON LOS ALIMENTOS PARA MOSTRAR EN EL ALERTDIALOG
+    fun crearAlimentosWarning(listaDosAlimentosSeleccionados: ArrayList<Alimentos>): String{
         var textoAlimentosWarning = ""
-        for (alimento in listaAlimentos){
+        for (alimento in listaDosAlimentosSeleccionados){
             textoAlimentosWarning =textoAlimentosWarning + alimento.nombre + ": " + alimento.propiedades + "\n"
         }
         return textoAlimentosWarning
     }
-
 }
