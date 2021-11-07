@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.fecha_hora.TimePickerFragment
-import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas
 import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas.Companion.preferenciasCompartidas
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.alexac.mistensiones.models.DocumentoDatos
@@ -239,7 +238,7 @@ class PrincipalActivity : AppCompatActivity() {
         }else{
             textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E1BD36"))
         }
-        var imc = calcularIMC(ultimoDocumento.peso.toDouble())
+        var imc = calcularIMC(ultimoDocumento.peso)
         textViewImcUltimaEntrada.text = imc.toString()
         if(imc >= 27){
             textViewSemaforoIMCUltimaEntrada.setBackgroundColor(Color.parseColor("#E14336"))
@@ -264,9 +263,11 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
+
+    //CALCULA EL IMC
     private fun calcularIMC(peso: Double): Double{
-        val altura: Double = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura().toDouble()
-        var imc = peso / Math.pow((altura/100), 2.0)
+        val altura: Double = preferenciasCompartidas.recuperarPrefenenciaAltura().toDouble()
+        var imc = peso / (Math.pow((altura/100), 2.0))
         var imcDosDecimales: Double = (((imc*100).toInt()).toDouble())/100
         return imcDosDecimales
     }
