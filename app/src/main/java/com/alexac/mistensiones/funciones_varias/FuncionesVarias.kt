@@ -7,6 +7,7 @@ import android.util.Log
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.models.Alimentos
 import com.alexac.mistensiones.models.DocumentoDatos
+import com.alexac.mistensiones.models.Ejercicios
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import java.sql.Timestamp
@@ -78,12 +79,23 @@ class FuncionesVarias {
     }
 
 
-    //MUESTRA EL DIALOG WARNING
-    fun mostrarDialogoWarning(context: Context, textoAlimentos: String){
+    //MUESTRA EL DIALOG WARNING ALIMENTOS
+    fun mostrarDialogoWarningAlimentos(context: Context, textoAlimentos: String){
         val builder = AlertDialog.Builder(context)
 
         builder.setTitle(context.getString(R.string.precaucion_medico))
-        builder.setMessage(context.getString(R.string.mensaje_warning) + textoAlimentos)
+        builder.setMessage(context.getString(R.string.mensaje_warning_alimentos) + textoAlimentos)
+        builder.setPositiveButton(R.string.ok, {dialogInterface: DialogInterface, i: Int -> dialogInterface.cancel()})
+        builder.show()
+    }
+
+
+    //MUESTRA EL DIALOG WARNING EJERCICIOS
+    fun mostrarDialogoWarningEjercicios(context: Context, textoEjercicios: String){
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle(context.getString(R.string.precaucion_imc))
+        builder.setMessage(context.getString(R.string.mensaje_warning_ejercicios) + textoEjercicios)
         builder.setPositiveButton(R.string.ok, {dialogInterface: DialogInterface, i: Int -> dialogInterface.cancel()})
         builder.show()
     }
@@ -99,7 +111,7 @@ class FuncionesVarias {
             }
             listaAlimentos = parsearAlimentos(alimentos)
 
-            mostrarDialogoWarning(context, crearAlimentosWarning(listaAlimentos))
+            mostrarDialogoWarningAlimentos(context, crearAlimentosWarning(listaAlimentos))
         }
         return listaAlimentos
     }
@@ -136,5 +148,53 @@ class FuncionesVarias {
             textoAlimentosWarning =textoAlimentosWarning + alimento.nombre + ": " + alimento.propiedades + "\n"
         }
         return textoAlimentosWarning
+    }
+
+    //FUNCION QUE EXTRAE DE LA BASE DE DATOS LOS EJERCICIOS Y LOS TRANSFORMA EN UN ARRAY DE OBJETOS EJERCICIOS
+    fun extraerEjercicios(context: Context): ArrayList<Ejercicios>{
+        var listaEjercicios: ArrayList<Ejercicios> = arrayListOf<Ejercicios>()
+        val coleccionEjercicios = database.collection("ejercicios")
+        coleccionEjercicios.get().addOnSuccessListener { ejercicios ->
+            for (ejercicio in ejercicios) {
+                Log.d("Registro", "${ejercicio.id} => ${ejercicio.data}")
+            }
+            listaEjercicios = parsearEjercicios(ejercicios)
+
+            mostrarDialogoWarningEjercicios(context, crearEjerciciosWarning(listaEjercicios))
+        }
+        return listaEjercicios
+    }
+
+    //FUNCION QUE PARSEA LA CONSULTA A LA BASE DE DATOS DE EJERCICIOS Y LO PARSEA A OBJETOS DE LA CLASE EJERCICIOS. SELECCIONANDO UNICAMENTE 2
+    fun parsearEjercicios(ejercicios: QuerySnapshot): ArrayList<Ejercicios> {
+        val listaEjercicios = arrayListOf<Ejercicios>()
+        val listaDosEjerciciosSeleccionados = arrayListOf<Ejercicios>()
+        var randomIndex1 = 0
+        var randomIndex2 = 0
+        for (ejercicio in ejercicios) {
+            var ejercicioNuevo = Ejercicios()
+            ejercicioNuevo.nombre = ejercicio["nombre"] as String
+            ejercicioNuevo.enlace = ejercicio["enlace"] as String
+            listaEjercicios.add(ejercicioNuevo)
+        }
+        do{
+            randomIndex1 = (0..listaEjercicios.size-1).random()
+            randomIndex2 = (0..listaEjercicios.size-1).random()
+        }while (randomIndex1 == randomIndex2)
+
+        listaDosEjerciciosSeleccionados.add(listaEjercicios[randomIndex1])
+        listaDosEjerciciosSeleccionados.add(listaEjercicios[randomIndex2])
+
+        return listaDosEjerciciosSeleccionados
+    }
+
+
+    //FUNCION QUE CREA UN STRING CON LOS EJERCICIOS PARA MOSTRAR EN EL ALERTDIALOG
+    fun crearEjerciciosWarning(listaDosEjerciciosSeleccionados: ArrayList<Ejercicios>): String{
+        var textoEjerciciosWarning = ""
+        for (ejercicio in listaDosEjerciciosSeleccionados){
+            textoEjerciciosWarning =textoEjerciciosWarning + ejercicio.nombre + ": " + ejercicio.enlace + "\n"
+        }
+        return textoEjerciciosWarning
     }
 }

@@ -54,9 +54,11 @@
     <string name="grafica">GRAFICA</string>
     <string name="ok">OK</string>
     <string name="precaucion_medico">PRECAUCIÓN. CONTACTE CON SU MÉDICO</string>
+    <string name="precaucion_imc">PRECAUCIÓN. IMC ALTO</string>
     <string name="opciones">OPCIONES</string>
     <string name="aceptar">ACEPTAR</string>
-    <string name="mensaje_warning">"Hemos detectado que las 3 últimas tensiones introducidas, están por encima de lo normal con el consiguiente riesgo cardiovascular para su salud. A continuación le detallamos un par de alimentos con cualidades para mejorar la salud: \n"</string>
+    <string name="mensaje_warning_alimentos">"Hemos detectado que las 3 últimas tensiones introducidas, están por encima de lo normal con el consiguiente riesgo cardiovascular para su salud. A continuación le detallamos un par de alimentos con cualidades para mejorar la salud: \n"</string>
+    <string name="mensaje_warning_ejercicios">"Su IMC indica que tiene sobrepeso. Le sugerimos que realice deporte regularmente. Aqui tiene alguna sugerencia de ejercicio: \n"</string>
     <string name= "mensaje_alimentos"></string>
     <string name="alertas_por_imc_alto">Alertas por IMC Alto</string>
     <string name="alertas_por_tension_alta">Alertas por Tension Alta</string>

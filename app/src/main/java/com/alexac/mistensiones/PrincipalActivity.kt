@@ -31,6 +31,8 @@ class PrincipalActivity : AppCompatActivity() {
     var segundos = 0
     var nanosegundos = 0
     var contadorWarningsTension: Int = 0
+    var contadorWarningsIMC: Int = 0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +118,7 @@ class PrincipalActivity : AppCompatActivity() {
 
         imageButtonSalir.setOnClickListener {
             val pantallaPrincipalIntent = Intent(this, LoginActivity::class.java).apply {}
+            preferenciasCompartidas.borrarPreferenciasLogin()
             FirebaseAuth.getInstance().signOut()
             startActivity(pantallaPrincipalIntent)
         }
@@ -176,6 +179,7 @@ class PrincipalActivity : AppCompatActivity() {
             ultimoDocumento.observaciones = editTextObservaciones.text.toString()
             ultimoDocumento.glucosa = editTextGlucemia.text.toString().toDouble()
             cargarUltimaEntrada(ultimoDocumento)
+            var imc = calcularIMC(ultimoDocumento.peso)
 
             if(preferenciasCompartidas.recuperarPrefenenciaTension() == true){
                 //SI LAS TENSIONES SON ALTAS SUMA UNO AL CONTADOR DE 3 MAXIMO
@@ -188,8 +192,25 @@ class PrincipalActivity : AppCompatActivity() {
                 contadorWarningsTension = 0
             }
 
+            if(preferenciasCompartidas.recuperarPrefenenciaIMC() == true){
+                //SI LOS IMC SON ALTOS SUMA UNO AL CONTADOR DE 30 MAXIMO
+                if(imc >= 27){
+                    contadorWarningsIMC += 1
+                }else{
+                    contadorWarningsIMC = 0
+                }
+            }else{
+                contadorWarningsIMC = 0
+            }
+
+            //SI SE INTRODUCEN 30 IMC ALTO SEGUIDAS, MUESTRA ALERTDIALOG CON SUGERENCIA
+            if(contadorWarningsIMC >= 15){
+                funcionesVarias.extraerEjercicios(this)
+                contadorWarningsIMC = 0
+            }
+
             //SI SE INTRODUCEN 3 TENSIONES ALTAS SEGUIDAS, MUESTRA ALERTDIALOG CON SUGERENCIA
-            if(contadorWarningsTension >= 1){
+            if(contadorWarningsTension >= 3){
                 funcionesVarias.extraerAlimentos(this)
                 contadorWarningsTension = 0
             }
@@ -218,10 +239,8 @@ class PrincipalActivity : AppCompatActivity() {
         }else{
             textViewSemaforoUltimaEntrada.setBackgroundColor(Color.parseColor("#E1BD36"))
         }
-        val altura: Double = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura().toDouble()
-        var imc = ultimoDocumento.peso / Math.pow((altura/100), 2.0)
-        var imcDosDecimales: Double = (((imc*100).toInt()).toDouble())/100
-        textViewImcUltimaEntrada.text = imcDosDecimales.toString()
+        var imc = calcularIMC(ultimoDocumento.peso.toDouble())
+        textViewImcUltimaEntrada.text = imc.toString()
         if(imc >= 27){
             textViewSemaforoIMCUltimaEntrada.setBackgroundColor(Color.parseColor("#E14336"))
         }else if(imc <= 19){
@@ -243,6 +262,13 @@ class PrincipalActivity : AppCompatActivity() {
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
             setup(email)
         }
+    }
+
+    private fun calcularIMC(peso: Double): Double{
+        val altura: Double = CargarPreferenciasCompartidas.preferenciasCompartidas.recuperarPrefenenciaAltura().toDouble()
+        var imc = peso / Math.pow((altura/100), 2.0)
+        var imcDosDecimales: Double = (((imc*100).toInt()).toDouble())/100
+        return imcDosDecimales
     }
 
 

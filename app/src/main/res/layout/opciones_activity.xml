@@ -62,6 +62,13 @@
             android:checked="true"
             android:text="@string/alertas_por_tension_alta" />
 
+        <Switch
+            android:id="@+id/switchPush"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Notificaciones Push" />
+
         <Button
             android:id="@+id/button_modificar_opciones"
             android:layout_width="match_parent"

@@ -3,12 +3,13 @@ package com.alexac.mistensiones
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas.Companion.preferenciasCompartidas
+import com.google.android.gms.tasks.Task
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.opciones_activity.*
 
 class OpcionesActivity : AppCompatActivity() {
 
-    private val avisoTension = "tension"
-    private val avisoIMC = "imc"
+    lateinit var suscrito: Task<Void>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +40,17 @@ class OpcionesActivity : AppCompatActivity() {
             switchIMC.isChecked = false
         }
 
+        if (preferenciasCompartidas.recuperarPrefenenciaSuscripcionPush() == true){
+            switchPush.isChecked = true
+        }else{
+            switchPush.isChecked = false
+        }
+
+
         button_modificar_opciones.setOnClickListener {
             goPrincipalActivity()
         }
+
 
         switchTension.setOnClickListener{
             if(switchTension.isChecked){
@@ -50,6 +59,8 @@ class OpcionesActivity : AppCompatActivity() {
                 preferenciasCompartidas.guardarPreferenciaTension(false)
             }
         }
+
+
         switchIMC.setOnClickListener {
             if(switchIMC.isChecked){
                 preferenciasCompartidas.guardarPreferenciaIMC(true)
@@ -57,6 +68,25 @@ class OpcionesActivity : AppCompatActivity() {
                 preferenciasCompartidas.guardarPreferenciaIMC(false)
             }
         }
+
+        switchPush.setOnClickListener {
+            if(switchPush.isChecked){
+                preferenciasCompartidas.guardarPreferenciaSuscripcionPush(true)
+                notification()
+            }else{
+                preferenciasCompartidas.guardarPreferenciaSuscripcionPush(false)
+                noNotificaion()
+            }
+        }
+    }
+
+    private fun notification(){
+        suscrito = FirebaseMessaging.getInstance().subscribeToTopic("suscritos")
+    }
+
+    private fun noNotificaion(){
+
+        suscrito =  FirebaseMessaging.getInstance().unsubscribeFromTopic("suscritos");
     }
 
 

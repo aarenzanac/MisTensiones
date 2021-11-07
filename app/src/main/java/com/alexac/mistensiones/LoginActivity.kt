@@ -2,11 +2,14 @@ package com.alexac.mistensiones
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas.Companion.preferenciasCompartidas
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.login_activity.*
+
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
+        login_layout.visibility = View.VISIBLE
 
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
@@ -24,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
         analytics.logEvent("InitScreen", bundle)
 
         setup()
+        comprobarSesion()
     }
 
 
@@ -40,6 +45,8 @@ class LoginActivity : AppCompatActivity() {
 
                     if(it.isSuccessful){
                         Toast.makeText(this, "ACCESO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
+                        preferenciasCompartidas.guardarPreferenciaEmail(edit_text_email.text.toString())
+                        preferenciasCompartidas.guardarPreferenciaPwd(edit_text_password.text.toString())
                         goPrincipalActivity(edit_text_email.text.toString(), edit_text_password.text.toString())
                     }else{
                         mostrarError(it.exception.toString())
@@ -74,6 +81,15 @@ class LoginActivity : AppCompatActivity() {
             "com.google.firebase.FirebaseTooManyRequestsException: We have blocked all requests from this device due to unusual activity. Try again later. [ Access to this account has been temporarily " +
                     "disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. ]" ->
                 Toast.makeText(this, "Usuario bloqueado. Contacte con el administrador.",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun comprobarSesion(){
+        val email: String? = preferenciasCompartidas.recuperarPrefenenciaEmail()
+        val pwd: String? = preferenciasCompartidas.recuperarPrefenenciaPwd()
+        if(!email.equals("")  && !pwd.equals("")){
+            login_layout.visibility = View.INVISIBLE
+            goPrincipalActivity(email!!, pwd!!)
         }
     }
 }
