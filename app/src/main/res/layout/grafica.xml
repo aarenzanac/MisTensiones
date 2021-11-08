@@ -100,10 +100,11 @@
 
         </LinearLayout>
 
-        <lecho.lib.hellocharts.view.LineChartView
-            android:id="@+id/chart"
+        <com.github.mikephil.charting.charts.LineChart
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="593dp" />
+            android:layout_weight="1"
+            android:id="@+id/graficatension"/>
 
         <LinearLayout
             android:layout_width="match_parent"
