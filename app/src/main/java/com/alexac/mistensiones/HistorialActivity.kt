@@ -1,5 +1,6 @@
 package com.alexac.mistensiones
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
+import com.alexac.mistensiones.graficas.GraficaTension
 import com.alexac.mistensiones.models.DocumentoDatos
 import com.alexac.mistensiones.recyclerView.DatosAdapter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -69,6 +71,13 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
 
         imageButtonVolverHistorial.setOnClickListener {
            onBackPressed()
+        }
+
+        imageButtonGraficas.setOnClickListener {
+            val pantallaGraficaIntent = Intent(this, GraficaTension::class.java).apply {
+                putExtra("email", email)
+            }
+            startActivity(pantallaGraficaIntent)
         }
 
         imageViewFiltrarHistorial.setOnClickListener {

@@ -55,6 +55,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreen">
         </activity>
+        <activity android:name=".graficas.GraficaTension"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashScreen">
+        </activity>
 
         <service
             android:name=".MyFirebaseMessagingService"
