@@ -2,25 +2,22 @@ package com.alexac.mistensiones.graficas
 
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.listener.ChartTouchListener
+import com.alexac.mistensiones.funciones_varias.FuncionesVarias
+import com.alexac.mistensiones.models.DocumentoDatos
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.grafica.*
-import kotlinx.android.synthetic.main.grafica.graficatension
-import kotlinx.android.synthetic.main.graficaprueba.*
-import kotlinx.android.synthetic.main.historial_activity.*
-import java.security.KeyStore
 
 
 class GraficaTension: AppCompatActivity(){
 
     private val database = FirebaseFirestore.getInstance()
+    val funcionesVarias: FuncionesVarias = FuncionesVarias()
+    lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
     var diaInicio = 0
     var mesInicio = 0
     var añoInicio = 0
@@ -31,27 +28,28 @@ class GraficaTension: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.graficaprueba)
-        //editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
-        //editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
+        setContentView(R.layout.grafica)
+        editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
+        editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
 
 
         val bundle = intent.extras
         val email = bundle?.getString("email")
 
-        setlineChartData()
 
-        /*if (email != null) {
+
+        if (email != null) {
             database.collection("usuariosRegistrados").document(email).get().addOnSuccessListener {
                 textViewNombreLogueadoGrafica.setText(it.get("nombre") as String?)
             }
             setup(email)
-        }*/
+            mostrarTodo(email)
+        }
     }
 
 
 
-    /*private fun setup(email: String){
+    private fun setup(email: String){
 
 
         editTextDateGraficaInicio.setOnClickListener {
@@ -69,7 +67,7 @@ class GraficaTension: AppCompatActivity(){
         }
 
         imageViewFiltrarGrafica.setOnClickListener {
-
+            filtrar(email)
         }
 
 
@@ -91,8 +89,72 @@ class GraficaTension: AppCompatActivity(){
         mesFinal = month.toInt()
         añoFinal = year.toInt()-1900
     }
-*/
-    private fun setlineChartData(){
+
+    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
+    private fun mostrarTodo(email: String){
+
+        val coleccionFechas = database.collection(email)
+        coleccionFechas.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d("Registro", "${document.id} => ${document.data}")
+            }
+            listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+        }
+    }
+
+    // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
+    private fun filtrar(email: String): ArrayList<DocumentoDatos>{
+        var listaDocumentosFiltrados = arrayListOf<DocumentoDatos>()
+        if(editTextDateGraficaInicio.text.isNotEmpty() && editTextDateGraficaFinal.text.isNotEmpty()){
+            val coleccionFechas = database.collection(email)
+            coleccionFechas.get().addOnSuccessListener {documents ->
+                for (document in documents) {
+                    Log.d("Registro", "${document.id} => ${document.data}")
+                }
+                listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+                listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
+            }
+
+        }else {
+            Toast.makeText(this, "DEBE SELECCIONAR UNA FECHA PARA FILTRAR.", Toast.LENGTH_SHORT).show()
+        }
+        return listaDocumentosFiltrados
+    }
+
+
+    //CREA UN ARRAY CON LOS ELEMENTOS COMPRENDIDOS ENTRE EL TIMESTAMP INICIO Y FINAL SELECCIONADO.
+    private fun aplicarFiltroFechas(ListaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos>{
+        var timestampInicio = funcionesVarias.crearTimestamp(diaInicio, mesInicio, añoInicio)
+        var timestampFinal = funcionesVarias.crearTimestamp(diaFinal, mesFinal, añoFinal)
+        var arrayFiltrado = arrayListOf<DocumentoDatos>()
+        for(doc in listaDocumentoDatos){
+            if(doc.timestamp >= timestampInicio && doc.timestamp <= timestampFinal){
+                arrayFiltrado.add(doc)
+            }
+        }
+        return arrayFiltrado
+    }
+
+
+    private fun setLineChartData(listaDatosChart: ArrayList<DocumentoDatos>){
+        val arrayTensionesSistolicas: ArrayList<Double> = arrayListOf()
+        val arrayTensionesDiastolicas: ArrayList<Double> = arrayListOf()
+        val arrayOxigenacion: ArrayList<Int> = arrayListOf()
+        val arrayPeso: ArrayList<Double> = arrayListOf()
+        val arrayGlucemia: ArrayList<Double> = arrayListOf()
+        val arrayFecha: ArrayList<String> = arrayListOf()
+        for(dato in listaDatosChart){
+            arrayTensionesSistolicas.add(dato.sistolica)
+            arrayTensionesDiastolicas.add(dato.diastolica)
+            arrayOxigenacion.add(dato.oxigenacion.toInt())
+            arrayPeso.add(dato.peso)
+            arrayGlucemia.add(dato.glucosa)
+            arrayFecha.add(dato.fecha)
+        }
+
+
+    }
+    /*private fun setlineChartData(){
 
         val lineentry = ArrayList<Entry>()
         //el eje x sería los días y el y las tensiones
@@ -109,10 +171,8 @@ class GraficaTension: AppCompatActivity(){
 
         val data = LineData(linedataset)
 
-        gra.data = data
-        gra.setBackgroundColor(resources.getColor(R.color.white))
-        gra.animateXY(3000, 3000)
-
-
-    }
+        graficatension.data = data
+        graficatension.setBackgroundColor(resources.getColor(R.color.white))
+        graficatension.animateXY(3000, 3000)
+    }*/
 }

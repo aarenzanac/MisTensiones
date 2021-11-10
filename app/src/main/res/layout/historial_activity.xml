@@ -142,20 +142,20 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/imageButtonVolverHistorial"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:contentDescription="@string/botonvolver"
-                        app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
-
-                    <ImageButton
                         android:id="@+id/imageButtonGraficas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:contentDescription="@string/botonvolver"
                         app:srcCompat="@mipmap/ic_chart_areaspline_grey600_48dp" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonVolverHistorial"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:contentDescription="@string/botonvolver"
+                        app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
 
                 </LinearLayout>
 

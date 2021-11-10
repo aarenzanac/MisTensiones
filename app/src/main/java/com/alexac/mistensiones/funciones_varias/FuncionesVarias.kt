@@ -197,4 +197,6 @@ class FuncionesVarias {
         }
         return textoEjerciciosWarning
     }
+
+
 }
