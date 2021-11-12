@@ -110,9 +110,9 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
 
         val coleccionFechas = database.collection(email)
         coleccionFechas.get().addOnSuccessListener { documents ->
-            for (document in documents) {
+            /*for (document in documents) {
                 Log.d("Registro", "${document.id} => ${document.data}")
-            }
+            }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
             if (listaDocumentoDatos.isEmpty()) {
                 datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
@@ -129,9 +129,9 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         if(editTextDateHistorialInicio.text.isNotEmpty() && editTextDateHistorialFinal.text.isNotEmpty()){
             val coleccionFechas = database.collection(email)
             coleccionFechas.get().addOnSuccessListener {documents ->
-                for (document in documents) {
+               /* for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
-                }
+                }*/
                 listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                 var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
                 if (listaDocumentoDatos.isEmpty()){

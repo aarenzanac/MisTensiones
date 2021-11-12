@@ -25,7 +25,7 @@ class FuncionesVarias {
         var posicion = 0
         for (document in documents) {
             var DocumentoDatos = DocumentoDatos()
-            Log.d("Registro", "${document.id} => ${document.data}")
+            //Log.d("Registro", "${document.id} => ${document.data}")
             DocumentoDatos.fecha = document["fecha"] as String
             DocumentoDatos.hora = document["hora"] as String
             DocumentoDatos.sistolica = document["sistolica"] as Double

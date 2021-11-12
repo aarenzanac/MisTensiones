@@ -23,7 +23,7 @@ class GraficaTension: AppCompatActivity(){
 
     private val database = FirebaseFirestore.getInstance()
     val funcionesVarias: FuncionesVarias = FuncionesVarias()
-    lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
+    var listaDocumentoDatos: ArrayList<DocumentoDatos> = arrayListOf<DocumentoDatos>()
     var diaInicio = 0
     var mesInicio = 0
     var añoInicio = 0
@@ -49,7 +49,8 @@ class GraficaTension: AppCompatActivity(){
                 textViewNombreLogueadoGrafica.setText(it.get("nombre") as String?)
             }
             setup(email)
-            mostrarTodo(email)
+            listaDocumentoDatos = mostrarTodo(email)
+            setLineChartData(listaDocumentoDatos)
         }
     }
 
@@ -75,7 +76,6 @@ class GraficaTension: AppCompatActivity(){
         imageViewFiltrarGrafica.setOnClickListener {
             var arrayFiltrado = filtrar(email)
             setLineChartData(arrayFiltrado)
-            Log.println(INFO, "Mensaje", "hola")
         }
 
 
@@ -85,7 +85,7 @@ class GraficaTension: AppCompatActivity(){
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateGraficaInicio.setText("$day-$month1-$year")
         diaInicio = day.toInt()
-        mesInicio = month.toInt()
+        mesInicio = month1.toInt()
         añoInicio = year.toInt()-1900
     }
 
@@ -94,20 +94,21 @@ class GraficaTension: AppCompatActivity(){
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateGraficaFinal.setText("$day-$month1-$year")
         diaFinal = day.toInt()+1
-        mesFinal = month.toInt()
+        mesFinal = month1.toInt()
         añoFinal = year.toInt()-1900
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
-    private fun mostrarTodo(email: String){
+    private fun mostrarTodo(email: String): ArrayList<DocumentoDatos>{
 
         val coleccionFechas = database.collection(email)
         coleccionFechas.get().addOnSuccessListener { documents ->
-            for (document in documents) {
+            /*for (document in documents) {
                 Log.d("Registro", "${document.id} => ${document.data}")
-            }
+            }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
         }
+        return listaDocumentoDatos
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
@@ -116,9 +117,9 @@ class GraficaTension: AppCompatActivity(){
         if(editTextDateGraficaInicio.text.isNotEmpty() && editTextDateGraficaFinal.text.isNotEmpty()){
             val coleccionFechas = database.collection(email)
             coleccionFechas.get().addOnSuccessListener {documents ->
-                for (document in documents) {
+                /*for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
-                }
+                }*/
                 listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                 listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
             }
@@ -131,11 +132,11 @@ class GraficaTension: AppCompatActivity(){
 
 
     //CREA UN ARRAY CON LOS ELEMENTOS COMPRENDIDOS ENTRE EL TIMESTAMP INICIO Y FINAL SELECCIONADO.
-    private fun aplicarFiltroFechas(ListaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos>{
+    private fun aplicarFiltroFechas(listaDocumentoDatosBrutos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos>{
         var timestampInicio = funcionesVarias.crearTimestamp(diaInicio, mesInicio, añoInicio)
         var timestampFinal = funcionesVarias.crearTimestamp(diaFinal, mesFinal, añoFinal)
         var arrayFiltrado = arrayListOf<DocumentoDatos>()
-        for(doc in listaDocumentoDatos){
+        for(doc in listaDocumentoDatosBrutos){
             if(doc.timestamp >= timestampInicio && doc.timestamp <= timestampFinal){
                 arrayFiltrado.add(doc)
             }
@@ -145,12 +146,12 @@ class GraficaTension: AppCompatActivity(){
 
 
     private fun setLineChartData(listaDatosChart: ArrayList<DocumentoDatos>){
-        val arrayTensionesSistolicas: ArrayList<Float> = arrayListOf()
-        val arrayTensionesDiastolicas: ArrayList<Float> = arrayListOf()
-        val arrayOxigenacion: ArrayList<Float> = arrayListOf()
-        val arrayPeso: ArrayList<Float> = arrayListOf()
-        val arrayGlucemia: ArrayList<Float> = arrayListOf()
-        val arrayFecha: ArrayList<String> = arrayListOf()
+        val arrayTensionesSistolicas = arrayListOf<Float>()
+        val arrayTensionesDiastolicas = arrayListOf<Float>()
+        val arrayOxigenacion = arrayListOf<Float>()
+        val arrayPeso = arrayListOf<Float>()
+        val arrayGlucemia = arrayListOf<Float>()
+        val arrayFecha = arrayListOf<String>()
         for(dato in listaDatosChart){
             arrayTensionesSistolicas.add(dato.sistolica.toFloat())
             arrayTensionesDiastolicas.add(dato.diastolica.toFloat())
@@ -159,8 +160,9 @@ class GraficaTension: AppCompatActivity(){
             arrayGlucemia.add(dato.glucosa.toFloat())
             arrayFecha.add(dato.fecha)
         }
+
+        Log.println(INFO, "Mensaje", "hola")
         for (sisto in arrayTensionesSistolicas) {
-            //Log.d("Registro", "Sistolica => ${sisto}")
             Log.println(INFO, "Mensaje", "hola")
         }
 
