@@ -38,6 +38,7 @@ class FuncionesVarias {
             DocumentoDatos.timestamp = document["timestamp"] as Long
             listaDocumentoDatos.add(DocumentoDatos)
         }
+        Log.d("Registro", "FIN EXTRACCIÓN")
         var listaDocumentoDatosOrdenada = ordenarMayorAMenor(listaDocumentoDatos)
         for (documento in listaDocumentoDatosOrdenada) {
             documento.posicion = posicion
@@ -158,6 +159,7 @@ class FuncionesVarias {
             for (ejercicio in ejercicios) {
                 Log.d("Registro", "${ejercicio.id} => ${ejercicio.data}")
             }
+
             listaEjercicios = parsearEjercicios(ejercicios)
 
             mostrarDialogoWarningEjercicios(context, crearEjerciciosWarning(listaEjercicios))

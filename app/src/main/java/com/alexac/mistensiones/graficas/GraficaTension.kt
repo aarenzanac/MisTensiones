@@ -1,14 +1,20 @@
 package com.alexac.mistensiones.graficas
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.util.Log.INFO
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.alexac.mistensiones.models.DocumentoDatos
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.grafica.*
 
@@ -67,7 +73,9 @@ class GraficaTension: AppCompatActivity(){
         }
 
         imageViewFiltrarGrafica.setOnClickListener {
-            filtrar(email)
+            var arrayFiltrado = filtrar(email)
+            setLineChartData(arrayFiltrado)
+            Log.println(INFO, "Mensaje", "hola")
         }
 
 
@@ -137,22 +145,59 @@ class GraficaTension: AppCompatActivity(){
 
 
     private fun setLineChartData(listaDatosChart: ArrayList<DocumentoDatos>){
-        val arrayTensionesSistolicas: ArrayList<Double> = arrayListOf()
-        val arrayTensionesDiastolicas: ArrayList<Double> = arrayListOf()
-        val arrayOxigenacion: ArrayList<Int> = arrayListOf()
-        val arrayPeso: ArrayList<Double> = arrayListOf()
-        val arrayGlucemia: ArrayList<Double> = arrayListOf()
+        val arrayTensionesSistolicas: ArrayList<Float> = arrayListOf()
+        val arrayTensionesDiastolicas: ArrayList<Float> = arrayListOf()
+        val arrayOxigenacion: ArrayList<Float> = arrayListOf()
+        val arrayPeso: ArrayList<Float> = arrayListOf()
+        val arrayGlucemia: ArrayList<Float> = arrayListOf()
         val arrayFecha: ArrayList<String> = arrayListOf()
         for(dato in listaDatosChart){
-            arrayTensionesSistolicas.add(dato.sistolica)
-            arrayTensionesDiastolicas.add(dato.diastolica)
-            arrayOxigenacion.add(dato.oxigenacion.toInt())
-            arrayPeso.add(dato.peso)
-            arrayGlucemia.add(dato.glucosa)
+            arrayTensionesSistolicas.add(dato.sistolica.toFloat())
+            arrayTensionesDiastolicas.add(dato.diastolica.toFloat())
+            arrayOxigenacion.add(dato.oxigenacion.toFloat())
+            arrayPeso.add(dato.peso.toFloat())
+            arrayGlucemia.add(dato.glucosa.toFloat())
             arrayFecha.add(dato.fecha)
+        }
+        for (sisto in arrayTensionesSistolicas) {
+            //Log.d("Registro", "Sistolica => ${sisto}")
+            Log.println(INFO, "Mensaje", "hola")
+        }
+
+        //CON LOS ARRAYS DE DATOS, CREO LOS PUNTOS DE LA GRÁFICA
+        val entrySistolicas = arrayTensionesSistolicas.mapIndexed { index, arrayList ->
+            Entry(index.toFloat(), arrayList[index])
+        }
+
+        val entryDiastolicas = arrayTensionesDiastolicas.mapIndexed { index, arrayList ->
+            Entry(index.toFloat(), arrayList[index])
+        }
+
+        val entryOxigenacion = arrayOxigenacion.mapIndexed { index, arrayList ->
+            Entry(index.toFloat(), arrayList[index])
+        }
+
+        val entryPeso = arrayPeso.mapIndexed { index, arrayList ->
+            Entry(index.toFloat(), arrayList[index])
+        }
+
+        val entryGlucemia= arrayGlucemia.mapIndexed { index, arrayList ->
+            Entry(index.toFloat(), arrayList[index])
         }
 
 
+        val lineDataSetSistolica = LineDataSet(entrySistolicas, "Sistólica")
+        lineDataSetSistolica.color = Color.RED
+        lineDataSetSistolica.setDrawValues(false)
+        lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
+
+        val dataSistolicas = LineData(lineDataSetSistolica)
+
+        graficatension.data = dataSistolicas
+        graficatension.setBackgroundColor(Color.WHITE)
+        graficatension.animateXY(3000, 3000)
+
+        graficatension.invalidate()
     }
     /*private fun setlineChartData(){
 
@@ -175,4 +220,8 @@ class GraficaTension: AppCompatActivity(){
         graficatension.setBackgroundColor(resources.getColor(R.color.white))
         graficatension.animateXY(3000, 3000)
     }*/
+}
+
+private operator fun Float.get(index: Int): Float {
+    return index.toFloat()
 }
