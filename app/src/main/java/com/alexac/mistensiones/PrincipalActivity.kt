@@ -255,10 +255,11 @@ class PrincipalActivity : AppCompatActivity() {
 
         val coleccionTotal = database.collection(email)
         coleccionTotal.get().addOnSuccessListener { documents ->
-            for (document in documents) {
+            /*for (document in documents) {
                 Log.d("Registro", "${document.id} => ${document.data}")
-            }
+            }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+            Log.d("Registro", "EXTRACCION DE PRINCIPAL ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
             setup(email)
         }
     }

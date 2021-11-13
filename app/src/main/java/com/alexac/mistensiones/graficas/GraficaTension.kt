@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.util.Log.INFO
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.R
@@ -15,6 +14,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.grafica.*
 
@@ -23,7 +23,7 @@ class GraficaTension: AppCompatActivity(){
 
     private val database = FirebaseFirestore.getInstance()
     val funcionesVarias: FuncionesVarias = FuncionesVarias()
-    var listaDocumentoDatos: ArrayList<DocumentoDatos> = arrayListOf<DocumentoDatos>()
+    lateinit var listaDocumentoDatos: ArrayList<DocumentoDatos>
     var diaInicio = 0
     var mesInicio = 0
     var añoInicio = 0
@@ -37,6 +37,7 @@ class GraficaTension: AppCompatActivity(){
         setContentView(R.layout.grafica)
         editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
         editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
+        listaDocumentoDatos = arrayListOf<DocumentoDatos>()
 
 
         val bundle = intent.extras
@@ -49,8 +50,8 @@ class GraficaTension: AppCompatActivity(){
                 textViewNombreLogueadoGrafica.setText(it.get("nombre") as String?)
             }
             setup(email)
-            listaDocumentoDatos = mostrarTodo(email)
-            setLineChartData(listaDocumentoDatos)
+            mostrarTodo(email)
+
         }
     }
 
@@ -77,8 +78,6 @@ class GraficaTension: AppCompatActivity(){
             var arrayFiltrado = filtrar(email)
             setLineChartData(arrayFiltrado)
         }
-
-
     }
 
     private fun onDateSelectedInicio(day: Int, month: Int, year: Int) {
@@ -99,16 +98,18 @@ class GraficaTension: AppCompatActivity(){
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
-    private fun mostrarTodo(email: String): ArrayList<DocumentoDatos>{
+    private fun mostrarTodo(email: String){
 
-        val coleccionFechas = database.collection(email)
-        coleccionFechas.get().addOnSuccessListener { documents ->
+        val coleccionTotal = database.collection(email)
+        coleccionTotal.get().addOnSuccessListener { documents ->
             /*for (document in documents) {
                 Log.d("Registro", "${document.id} => ${document.data}")
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+            Log.d("Registro", "EXTRACCION DE GRAFICA ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
+            setLineChartData(listaDocumentoDatos)
         }
-        return listaDocumentoDatos
+
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
@@ -146,6 +147,7 @@ class GraficaTension: AppCompatActivity(){
 
 
     private fun setLineChartData(listaDatosChart: ArrayList<DocumentoDatos>){
+        Log.d("Registro", "ARRAY DE DATOS PARA GRAFICA ---- Numero de elementos: ${listaDatosChart.size}")
         val arrayTensionesSistolicas = arrayListOf<Float>()
         val arrayTensionesDiastolicas = arrayListOf<Float>()
         val arrayOxigenacion = arrayListOf<Float>()
@@ -161,30 +163,25 @@ class GraficaTension: AppCompatActivity(){
             arrayFecha.add(dato.fecha)
         }
 
-        Log.println(INFO, "Mensaje", "hola")
-        for (sisto in arrayTensionesSistolicas) {
-            Log.println(INFO, "Mensaje", "hola")
-        }
-
         //CON LOS ARRAYS DE DATOS, CREO LOS PUNTOS DE LA GRÁFICA
         val entrySistolicas = arrayTensionesSistolicas.mapIndexed { index, arrayList ->
-            Entry(index.toFloat(), arrayList[index])
+            Entry(index.toFloat(), arrayTensionesSistolicas[index])
         }
 
         val entryDiastolicas = arrayTensionesDiastolicas.mapIndexed { index, arrayList ->
-            Entry(index.toFloat(), arrayList[index])
+            Entry(index.toFloat(), arrayTensionesDiastolicas[index])
         }
 
         val entryOxigenacion = arrayOxigenacion.mapIndexed { index, arrayList ->
-            Entry(index.toFloat(), arrayList[index])
+            Entry(index.toFloat(), arrayOxigenacion[index])
         }
 
         val entryPeso = arrayPeso.mapIndexed { index, arrayList ->
-            Entry(index.toFloat(), arrayList[index])
+            Entry(index.toFloat(), arrayPeso[index])
         }
 
         val entryGlucemia= arrayGlucemia.mapIndexed { index, arrayList ->
-            Entry(index.toFloat(), arrayList[index])
+            Entry(index.toFloat(), arrayGlucemia[index])
         }
 
 
@@ -193,37 +190,22 @@ class GraficaTension: AppCompatActivity(){
         lineDataSetSistolica.setDrawValues(false)
         lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
 
-        val dataSistolicas = LineData(lineDataSetSistolica)
+        val lineDataSetDiastolica = LineDataSet(entryDiastolicas, "Diastólica")
+        lineDataSetSistolica.color = Color.BLUE
+        lineDataSetSistolica.setDrawValues(false)
+        lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
 
-        graficatension.data = dataSistolicas
+        val dataSets = arrayListOf(lineDataSetSistolica, lineDataSetDiastolica)
+
+
+
+        val lineData = LineData(dataSets as List<ILineDataSet>?)
+
+        graficatension.data = lineData
         graficatension.setBackgroundColor(Color.WHITE)
         graficatension.animateXY(3000, 3000)
 
         graficatension.invalidate()
     }
-    /*private fun setlineChartData(){
-
-        val lineentry = ArrayList<Entry>()
-        //el eje x sería los días y el y las tensiones
-        lineentry.add(Entry(1f, 0f))
-        lineentry.add(Entry(2f, 126f))
-        lineentry.add(Entry(3f, 144f))
-        lineentry.add(Entry(4f, 118f))
-        lineentry.add(Entry(5f, 148f))
-        lineentry.add(Entry(6f, 133f))
-
-        val linedataset = LineDataSet(lineentry, "First")
-        linedataset.color = resources.getColor(R.color.purple_700)
-
-
-        val data = LineData(linedataset)
-
-        graficatension.data = data
-        graficatension.setBackgroundColor(resources.getColor(R.color.white))
-        graficatension.animateXY(3000, 3000)
-    }*/
 }
 
-private operator fun Float.get(index: Int): Float {
-    return index.toFloat()
-}

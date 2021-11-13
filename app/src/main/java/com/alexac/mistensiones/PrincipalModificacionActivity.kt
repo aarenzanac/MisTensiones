@@ -136,7 +136,7 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
             val coleccionFechas = database.collection(email)
             coleccionFechas.whereEqualTo("fecha", editTextDateModificacion.text.toString()).get().addOnSuccessListener {documents ->
                 for (document in documents) {
-                    Log.d("Registro", "${document.id} => ${document.data}")
+                    Log.d("Registro-----", "${document.id} => ${document.data}")
                 }
                 listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                 if (listaDocumentoDatos.isEmpty()){

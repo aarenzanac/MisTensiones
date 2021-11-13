@@ -114,6 +114,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                 Log.d("Registro", "${document.id} => ${document.data}")
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+            Log.d("Registro", "EXTRACCION DE HISTORIAL ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
             if (listaDocumentoDatos.isEmpty()) {
                 datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
                 Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
@@ -121,6 +122,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                 datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
             }
         }
+
     }
 
 
