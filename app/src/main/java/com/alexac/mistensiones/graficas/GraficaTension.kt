@@ -30,6 +30,7 @@ class GraficaTension: AppCompatActivity(){
     var diaFinal = 0
     var mesFinal = 0
     var añoFinal = 0
+    var tipoDatos: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -50,7 +51,7 @@ class GraficaTension: AppCompatActivity(){
                 textViewNombreLogueadoGrafica.setText(it.get("nombre") as String?)
             }
             setup(email)
-            mostrarTodo(email)
+            mostrarTodo(email, "tensiones")
 
         }
     }
@@ -74,9 +75,45 @@ class GraficaTension: AppCompatActivity(){
             onBackPressed()
         }
 
-        imageViewFiltrarGrafica.setOnClickListener {
+        /*imageViewFiltrarGrafica.setOnClickListener {
             var arrayFiltrado = filtrar(email)
-            setLineChartData(arrayFiltrado)
+            setLineChartData(arrayFiltrado, "tensiones")
+        }*/
+
+        radioButtonTensiones.setOnClickListener {
+            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
+                tipoDatos = "tensiones"
+                mostrarTodo(email, tipoDatos)
+            }else{
+
+            }
+        }
+
+        radioButtonPeso.setOnClickListener {
+            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
+                tipoDatos = "peso"
+                mostrarTodo(email, tipoDatos)
+            }else{
+
+            }
+        }
+
+        radioButtonOxigeno.setOnClickListener {
+            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
+                tipoDatos = "oxigeno"
+                mostrarTodo(email, tipoDatos)
+            }else{
+
+            }
+        }
+
+        radioButtonGlucosa.setOnClickListener {
+            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
+                tipoDatos = "glucosa"
+                mostrarTodo(email, tipoDatos)
+            }else{
+
+            }
         }
     }
 
@@ -98,7 +135,7 @@ class GraficaTension: AppCompatActivity(){
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL
-    private fun mostrarTodo(email: String){
+    private fun mostrarTodo(email: String, tipoDatos: String){
 
         val coleccionTotal = database.collection(email)
         coleccionTotal.get().addOnSuccessListener { documents ->
@@ -107,7 +144,7 @@ class GraficaTension: AppCompatActivity(){
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
             Log.d("Registro", "EXTRACCION DE GRAFICA ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
-            setLineChartData(listaDocumentoDatos)
+            setLineChartData(listaDocumentoDatos, tipoDatos)
         }
 
     }
@@ -146,7 +183,7 @@ class GraficaTension: AppCompatActivity(){
     }
 
 
-    private fun setLineChartData(listaDatosChart: ArrayList<DocumentoDatos>){
+    private fun setLineChartData(listaDatosChart: ArrayList<DocumentoDatos>, tipoDatos: String){
         Log.d("Registro", "ARRAY DE DATOS PARA GRAFICA ---- Numero de elementos: ${listaDatosChart.size}")
         val arrayTensionesSistolicas = arrayListOf<Float>()
         val arrayTensionesDiastolicas = arrayListOf<Float>()
@@ -162,7 +199,6 @@ class GraficaTension: AppCompatActivity(){
             arrayGlucemia.add(dato.glucosa.toFloat())
             arrayFecha.add(dato.fecha)
         }
-
         //CON LOS ARRAYS DE DATOS, CREO LOS PUNTOS DE LA GRÁFICA
         val entrySistolicas = arrayTensionesSistolicas.mapIndexed { index, arrayList ->
             Entry(index.toFloat(), arrayTensionesSistolicas[index])
@@ -185,27 +221,52 @@ class GraficaTension: AppCompatActivity(){
         }
 
 
-        val lineDataSetSistolica = LineDataSet(entrySistolicas, "Sistólica")
+        val lineDataSetSistolica = LineDataSet(entrySistolicas, "Sistólica nmmHg")
         lineDataSetSistolica.color = Color.RED
         lineDataSetSistolica.setDrawValues(false)
         lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
 
-        val lineDataSetDiastolica = LineDataSet(entryDiastolicas, "Diastólica")
+        val lineDataSetDiastolica = LineDataSet(entryDiastolicas, "Diastólica mmHg")
         lineDataSetSistolica.color = Color.BLUE
         lineDataSetSistolica.setDrawValues(false)
         lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
 
         val dataSets = arrayListOf(lineDataSetSistolica, lineDataSetDiastolica)
 
+        val lineDataSetPeso = LineDataSet(entryPeso, "Peso Kg.")
+        lineDataSetPeso.color = Color.BLUE
+        lineDataSetPeso.setDrawValues(false)
+        lineDataSetPeso.setAxisDependency (YAxis.AxisDependency.LEFT)
+
+        val lineDataSetOxigeno = LineDataSet(entryOxigenacion, "Oxigenación %")
+        lineDataSetOxigeno.color = Color.BLUE
+        lineDataSetOxigeno.setDrawValues(false)
+        lineDataSetOxigeno.setAxisDependency (YAxis.AxisDependency.LEFT)
+
+        val lineDataSetGlucosa = LineDataSet(entryGlucemia, "Glucosa mg/dl")
+        lineDataSetGlucosa.color = Color.BLUE
+        lineDataSetGlucosa.setDrawValues(false)
+        lineDataSetGlucosa.setAxisDependency (YAxis.AxisDependency.LEFT)
 
 
-        val lineData = LineData(dataSets as List<ILineDataSet>?)
+        when(tipoDatos){
+            "tensiones" -> {val lineData = LineData(dataSets as List<ILineDataSet>?)
+                graficatension.data = lineData}
 
-        graficatension.data = lineData
+            "peso" -> {val lineData = LineData(lineDataSetPeso)
+                graficatension.data = lineData}
+
+            "oxigeno" -> {val lineData = LineData(lineDataSetOxigeno)
+                graficatension.data = lineData}
+
+            "glucosa" -> {val lineData = LineData(lineDataSetGlucosa)
+                graficatension.data = lineData}
+        }
+
         graficatension.setBackgroundColor(Color.WHITE)
-        graficatension.animateXY(3000, 3000)
-
+        graficatension.animateXY(1000, 1000)
         graficatension.invalidate()
+
     }
 }
 

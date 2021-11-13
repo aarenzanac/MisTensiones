@@ -102,7 +102,51 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="424dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/radioButonGroupGraficas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButtonTensiones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Tensiones mmHg"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonPeso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/peso_kg"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOxigeno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/oxigenacion"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonGlucosa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/glucemia_mg_dl"
+                    android:textSize="12sp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="506dp"
             android:orientation="vertical">
 
             <com.github.mikephil.charting.charts.LineChart
@@ -114,7 +158,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ImageButton
