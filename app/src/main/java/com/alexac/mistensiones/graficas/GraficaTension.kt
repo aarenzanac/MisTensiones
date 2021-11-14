@@ -10,10 +10,13 @@ import com.alexac.mistensiones.R
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
 import com.alexac.mistensiones.models.DocumentoDatos
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.grafica.*
@@ -31,6 +34,8 @@ class GraficaTension: AppCompatActivity(){
     var mesFinal = 0
     var añoFinal = 0
     var tipoDatos: String = ""
+    var arrayFiltrado: ArrayList<DocumentoDatos> = arrayListOf()
+    var arrayFecha = arrayListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,6 +44,7 @@ class GraficaTension: AppCompatActivity(){
         editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
         editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
+
 
 
         val bundle = intent.extras
@@ -75,44 +81,45 @@ class GraficaTension: AppCompatActivity(){
             onBackPressed()
         }
 
-        /*imageViewFiltrarGrafica.setOnClickListener {
-            var arrayFiltrado = filtrar(email)
-            setLineChartData(arrayFiltrado, "tensiones")
-        }*/
+        imageViewFiltrarGrafica.setOnClickListener {
+            filtrar(email, "tensiones")
+            radioButtonTensiones.isChecked = true
+
+        }
 
         radioButtonTensiones.setOnClickListener {
-            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
-                tipoDatos = "tensiones"
+            tipoDatos = "tensiones"
+            if(editTextDateGraficaInicio.text.isEmpty() && editTextDateGraficaFinal.text.isEmpty()){
                 mostrarTodo(email, tipoDatos)
             }else{
-
+                filtrar(email, tipoDatos)
             }
         }
 
         radioButtonPeso.setOnClickListener {
-            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
-                tipoDatos = "peso"
+            tipoDatos = "peso"
+            if(editTextDateGraficaInicio.text.isEmpty() && editTextDateGraficaFinal.text.isEmpty()){
                 mostrarTodo(email, tipoDatos)
             }else{
-
+                filtrar(email, tipoDatos)
             }
         }
 
         radioButtonOxigeno.setOnClickListener {
-            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
-                tipoDatos = "oxigeno"
+            tipoDatos = "oxigeno"
+            if(editTextDateGraficaInicio.text.isEmpty() && editTextDateGraficaFinal.text.isEmpty()){
                 mostrarTodo(email, tipoDatos)
             }else{
-
+                filtrar(email, tipoDatos)
             }
         }
 
         radioButtonGlucosa.setOnClickListener {
-            if(editTextDateGraficaInicio.text.isEmpty() || editTextDateGraficaFinal.text.isEmpty()){
-                tipoDatos = "glucosa"
+            tipoDatos = "glucosa"
+            if(editTextDateGraficaInicio.text.isEmpty() && editTextDateGraficaFinal.text.isEmpty()){
                 mostrarTodo(email, tipoDatos)
             }else{
-
+                filtrar(email, tipoDatos)
             }
         }
     }
@@ -121,7 +128,7 @@ class GraficaTension: AppCompatActivity(){
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateGraficaInicio.setText("$day-$month1-$year")
         diaInicio = day.toInt()
-        mesInicio = month1.toInt()
+        mesInicio = month.toInt()
         añoInicio = year.toInt()-1900
     }
 
@@ -130,7 +137,7 @@ class GraficaTension: AppCompatActivity(){
         val month1 = month + 1 // PORQUE EL MES 0 ES ENERO
         editTextDateGraficaFinal.setText("$day-$month1-$year")
         diaFinal = day.toInt()+1
-        mesFinal = month1.toInt()
+        mesFinal = month.toInt()
         añoFinal = year.toInt()-1900
     }
 
@@ -143,14 +150,15 @@ class GraficaTension: AppCompatActivity(){
                 Log.d("Registro", "${document.id} => ${document.data}")
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+            var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentoDatos)
             Log.d("Registro", "EXTRACCION DE GRAFICA ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
-            setLineChartData(listaDocumentoDatos, tipoDatos)
+            setLineChartData(listaDocumentoDatosOrdenada, tipoDatos)
         }
 
     }
 
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
-    private fun filtrar(email: String): ArrayList<DocumentoDatos>{
+    private fun filtrar(email: String, tipoDatos: String){
         var listaDocumentosFiltrados = arrayListOf<DocumentoDatos>()
         if(editTextDateGraficaInicio.text.isNotEmpty() && editTextDateGraficaFinal.text.isNotEmpty()){
             val coleccionFechas = database.collection(email)
@@ -160,12 +168,16 @@ class GraficaTension: AppCompatActivity(){
                 }*/
                 listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                 listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
+                var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentosFiltrados)
+
+
+                Log.d("Registro", "ARRAY DE DATOS PARA GRAFICA filtrados---- Numero de elementos: ${listaDocumentosFiltrados.size}")
+                setLineChartData(listaDocumentosFiltrados, tipoDatos)
             }
 
         }else {
-            Toast.makeText(this, "DEBE SELECCIONAR UNA FECHA PARA FILTRAR.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "DEBE SELECCIONAR FECHA DE INICIO Y FINAL PARA FILTRAR.", Toast.LENGTH_SHORT).show()
         }
-        return listaDocumentosFiltrados
     }
 
 
@@ -190,7 +202,7 @@ class GraficaTension: AppCompatActivity(){
         val arrayOxigenacion = arrayListOf<Float>()
         val arrayPeso = arrayListOf<Float>()
         val arrayGlucemia = arrayListOf<Float>()
-        val arrayFecha = arrayListOf<String>()
+        arrayFecha = arrayListOf<String>()
         for(dato in listaDatosChart){
             arrayTensionesSistolicas.add(dato.sistolica.toFloat())
             arrayTensionesDiastolicas.add(dato.diastolica.toFloat())
@@ -220,32 +232,35 @@ class GraficaTension: AppCompatActivity(){
             Entry(index.toFloat(), arrayGlucemia[index])
         }
 
+        var ejeX: XAxis = graficatension.xAxis
+        ejeX.valueFormatter = MyAxisFormatter()
+
 
         val lineDataSetSistolica = LineDataSet(entrySistolicas, "Sistólica nmmHg")
         lineDataSetSistolica.color = Color.RED
-        lineDataSetSistolica.setDrawValues(false)
+        lineDataSetSistolica.setDrawValues(true)
         lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
 
         val lineDataSetDiastolica = LineDataSet(entryDiastolicas, "Diastólica mmHg")
         lineDataSetSistolica.color = Color.BLUE
-        lineDataSetSistolica.setDrawValues(false)
+        lineDataSetSistolica.setDrawValues(true)
         lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
 
         val dataSets = arrayListOf(lineDataSetSistolica, lineDataSetDiastolica)
 
         val lineDataSetPeso = LineDataSet(entryPeso, "Peso Kg.")
         lineDataSetPeso.color = Color.BLUE
-        lineDataSetPeso.setDrawValues(false)
+        lineDataSetPeso.setDrawValues(true)
         lineDataSetPeso.setAxisDependency (YAxis.AxisDependency.LEFT)
 
         val lineDataSetOxigeno = LineDataSet(entryOxigenacion, "Oxigenación %")
         lineDataSetOxigeno.color = Color.BLUE
-        lineDataSetOxigeno.setDrawValues(false)
+        lineDataSetOxigeno.setDrawValues(true)
         lineDataSetOxigeno.setAxisDependency (YAxis.AxisDependency.LEFT)
 
         val lineDataSetGlucosa = LineDataSet(entryGlucemia, "Glucosa mg/dl")
         lineDataSetGlucosa.color = Color.BLUE
-        lineDataSetGlucosa.setDrawValues(false)
+        lineDataSetGlucosa.setDrawValues(true)
         lineDataSetGlucosa.setAxisDependency (YAxis.AxisDependency.LEFT)
 
 
@@ -268,5 +283,20 @@ class GraficaTension: AppCompatActivity(){
         graficatension.invalidate()
 
     }
+
+
+    inner class MyAxisFormatter : IndexAxisValueFormatter() {
+
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            val index = value.toInt()
+            return if (index < arrayFecha.size) {
+                arrayFecha[index]
+            } else {
+                ""
+            }
+        }
+    }
 }
+
+
 

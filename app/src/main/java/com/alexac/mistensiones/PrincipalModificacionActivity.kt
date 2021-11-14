@@ -139,11 +139,13 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
                     Log.d("Registro-----", "${document.id} => ${document.data}")
                 }
                 listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-                if (listaDocumentoDatos.isEmpty()){
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+                var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMayorAMenor(listaDocumentoDatos)
+
+                if (listaDocumentoDatosOrdenada.isEmpty()){
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatosOrdenada, this, this)
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
                 }else {
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+                    datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatosOrdenada, this, this)
 
                 }
             }

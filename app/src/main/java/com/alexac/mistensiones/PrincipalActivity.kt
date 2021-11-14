@@ -259,7 +259,9 @@ class PrincipalActivity : AppCompatActivity() {
                 Log.d("Registro", "${document.id} => ${document.data}")
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-            Log.d("Registro", "EXTRACCION DE PRINCIPAL ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
+            var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMayorAMenor(listaDocumentoDatos)
+
+            Log.d("Registro", "EXTRACCION DE PRINCIPAL ACTIVITY ---- Numero de elementos: ${listaDocumentoDatosOrdenada.size}")
             setup(email)
         }
     }

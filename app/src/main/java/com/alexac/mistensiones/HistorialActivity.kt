@@ -114,12 +114,13 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                 Log.d("Registro", "${document.id} => ${document.data}")
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+            var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMayorAMenor(listaDocumentoDatos)
             Log.d("Registro", "EXTRACCION DE HISTORIAL ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
-            if (listaDocumentoDatos.isEmpty()) {
-                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+            if (listaDocumentoDatosOrdenada.isEmpty()) {
+                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatosOrdenada, this, this)
                 Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
             } else {
-                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatos, this, this)
+                datosRecyclerview.adapter = DatosAdapter(listaDocumentoDatosOrdenada, this, this)
             }
         }
 
@@ -135,7 +136,8 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }*/
                 listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-                var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
+                var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMayorAMenor(listaDocumentoDatos)
+                var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatosOrdenada)
                 if (listaDocumentoDatos.isEmpty()){
                     datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
                     Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()

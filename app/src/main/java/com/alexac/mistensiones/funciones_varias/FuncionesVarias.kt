@@ -20,7 +20,7 @@ class FuncionesVarias {
     private val database = FirebaseFirestore.getInstance()
 
     //PARSEA TODOS LAS COLECCIONES CLAVE:VALOR DE FIREBASE A OBJETOS DE LA CLASE DOCUMENTODATOS Y DEVUELVE UN ARRAY CON OBJETOS DE LOS RESULTADOS
-    fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos>{
+    fun parsearDatos(documents: QuerySnapshot): ArrayList<DocumentoDatos> {
         val listaDocumentoDatos = arrayListOf<DocumentoDatos>()
         var posicion = 0
         for (document in documents) {
@@ -39,17 +39,14 @@ class FuncionesVarias {
             listaDocumentoDatos.add(DocumentoDatos)
         }
         Log.d("Registro", "FIN EXTRACCIÓN")
-        var listaDocumentoDatosOrdenada = ordenarMayorAMenor(listaDocumentoDatos)
-        for (documento in listaDocumentoDatosOrdenada) {
-            documento.posicion = posicion
-            posicion += 1
-        }
-        return listaDocumentoDatosOrdenada
+
+        return listaDocumentoDatos
     }
 
 
     //ORDENA LOS DOCUMENTOS OBTENIDOS DE MAYOR A MENOR TIMESTAMP, ES DECIR, PRIMERO LOS MAS RECIENTES
     fun ordenarMayorAMenor(listaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos> {
+        var posicion = 0
         var temp: DocumentoDatos
         for (x in 0 until listaDocumentoDatos.size){
             for(y in 0 until listaDocumentoDatos.size){
@@ -59,6 +56,32 @@ class FuncionesVarias {
                     listaDocumentoDatos[y] = temp
                 }
             }
+        }
+
+        for (documento in listaDocumentoDatos) {
+            documento.posicion = posicion
+            posicion += 1
+        }
+        return listaDocumentoDatos
+    }
+
+    //ORDENA LOS DOCUMENTOS OBTENIDOS DE MENOR A MAYOR TIMESTAMP, ES DECIR, PRIMERO LOS MAS ANTIGUOS. UTILIZADO PARA ORDENAR ELEMENTOS PARA LA GRÁFICA
+    fun ordenarMenorAMayor(listaDocumentoDatos: ArrayList<DocumentoDatos>): ArrayList<DocumentoDatos> {
+        var posicion = 0
+        var temp: DocumentoDatos
+        for (x in 0 until listaDocumentoDatos.size){
+            for(y in 0 until listaDocumentoDatos.size){
+                if(listaDocumentoDatos[x].timestamp < listaDocumentoDatos[y].timestamp){
+                    temp = listaDocumentoDatos[x]
+                    listaDocumentoDatos[x] = listaDocumentoDatos[y]
+                    listaDocumentoDatos[y] = temp
+                }
+            }
+        }
+
+        for (documento in listaDocumentoDatos) {
+            documento.posicion = posicion
+            posicion += 1
         }
         return listaDocumentoDatos
     }
