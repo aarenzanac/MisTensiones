@@ -63,4 +63,5 @@
     <string name="alertas_por_imc_alto">Alertas por IMC Alto</string>
     <string name="alertas_por_tension_alta">Alertas por Tension Alta</string>
     <string name="tensi_n">Tensión</string>
+    <string name="tensiones_mmhg">Tensiones mmHg</string>
 </resources>

@@ -40,7 +40,7 @@ class GraficaTension: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.grafica)
+        setContentView(R.layout.graficaresponsive)
         editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
         editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
@@ -284,7 +284,7 @@ class GraficaTension: AppCompatActivity(){
 
     }
 
-
+    //FUNCION PARA CAMBIAR LOS VALORES DEL EJE DE LAS X PONIENDO LAS FECHAS
     inner class MyAxisFormatter : IndexAxisValueFormatter() {
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
