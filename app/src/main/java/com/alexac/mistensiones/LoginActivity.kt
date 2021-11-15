@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
         setTheme(R.style.Apptheme)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_activity)
+        setContentView(R.layout.login_activity_responsive)
         login_layout.visibility = View.VISIBLE
 
         val analytics = FirebaseAnalytics.getInstance(this)

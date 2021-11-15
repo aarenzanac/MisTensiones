@@ -13,7 +13,7 @@ class RegistroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.registro_activity)
+        setContentView(R.layout.registro_activity_responsive)
 
         setup()
     }
