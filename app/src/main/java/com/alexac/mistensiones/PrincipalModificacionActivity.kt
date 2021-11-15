@@ -26,7 +26,7 @@ class PrincipalModificacionActivity : AppCompatActivity(), DatosAdapter.OnDocume
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.principal_modificacion_activity)
+        setContentView(R.layout.principal_modificacion_activity_responsive)
         editTextDateModificacion.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
         datosRecyclerview = findViewById(R.id.listaDatos)

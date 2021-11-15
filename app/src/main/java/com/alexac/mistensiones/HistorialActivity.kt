@@ -33,7 +33,7 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.historial_activity)
+        setContentView(R.layout.historial_activity_responsive)
         editTextDateHistorialInicio.setInputType(InputType.TYPE_NULL);
         editTextDateHistorialFinal.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
@@ -130,19 +130,26 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
     // FILTRA LOS DATOS EN FUNCIÓN DEL MAIL Y DE LA FECHA SELECCIONADA
     private fun filtrar(email: String){
         if(editTextDateHistorialInicio.text.isNotEmpty() && editTextDateHistorialFinal.text.isNotEmpty()){
-            val coleccionFechas = database.collection(email)
-            coleccionFechas.get().addOnSuccessListener {documents ->
-               /* for (document in documents) {
-                    Log.d("Registro", "${document.id} => ${document.data}")
-                }*/
-                listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-                var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMayorAMenor(listaDocumentoDatos)
-                var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatosOrdenada)
-                if (listaDocumentoDatos.isEmpty()){
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
-                    Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
-                }else {
-                    datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
+            var timestampInicio = funcionesVarias.crearTimestamp(diaInicio, mesInicio, añoInicio)
+            var timestampFinal = funcionesVarias.crearTimestamp(diaFinal, mesFinal, añoFinal)
+            if(timestampFinal < timestampInicio){
+                Toast.makeText(this, "LA FECHA FINAL NO PUEDE SER MENOR QUE LA INICIAL.", Toast.LENGTH_SHORT).show()
+
+            }else{
+                val coleccionFechas = database.collection(email)
+                coleccionFechas.get().addOnSuccessListener {documents ->
+                    /* for (document in documents) {
+                         Log.d("Registro", "${document.id} => ${document.data}")
+                     }*/
+                    listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+                    var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMayorAMenor(listaDocumentoDatos)
+                    var listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatosOrdenada)
+                    if (listaDocumentosFiltrados.isEmpty()){
+                        datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
+                        Toast.makeText(this, "NO HAY DOCUMENTOS PARA MOSTRAR.", Toast.LENGTH_SHORT).show()
+                    }else {
+                        datosRecyclerview.adapter = DatosAdapter(listaDocumentosFiltrados, this, this)
+                    }
                 }
             }
         }else {

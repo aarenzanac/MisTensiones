@@ -161,20 +161,25 @@ class GraficaTension: AppCompatActivity(){
     private fun filtrar(email: String, tipoDatos: String){
         var listaDocumentosFiltrados = arrayListOf<DocumentoDatos>()
         if(editTextDateGraficaInicio.text.isNotEmpty() && editTextDateGraficaFinal.text.isNotEmpty()){
-            val coleccionFechas = database.collection(email)
-            coleccionFechas.get().addOnSuccessListener {documents ->
-                /*for (document in documents) {
+            var timestampInicio = funcionesVarias.crearTimestamp(diaInicio, mesInicio, añoInicio)
+            var timestampFinal = funcionesVarias.crearTimestamp(diaFinal, mesFinal, añoFinal)
+            if(timestampFinal < timestampInicio){
+                Toast.makeText(this, "LA FECHA FINAL NO PUEDE SER MENOR QUE LA INICIAL.", Toast.LENGTH_SHORT).show()
+            }else {
+                val coleccionFechas = database.collection(email)
+                coleccionFechas.get().addOnSuccessListener { documents ->
+                    /*for (document in documents) {
                     Log.d("Registro", "${document.id} => ${document.data}")
                 }*/
-                listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-                listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
-                var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentosFiltrados)
+                    listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
+                    listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
+                    var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentosFiltrados)
 
 
-                Log.d("Registro", "ARRAY DE DATOS PARA GRAFICA filtrados---- Numero de elementos: ${listaDocumentosFiltrados.size}")
-                setLineChartData(listaDocumentosFiltrados, tipoDatos)
+                    Log.d("Registro", "ARRAY DE DATOS PARA GRAFICA filtrados---- Numero de elementos: ${listaDocumentosFiltrados.size}")
+                    setLineChartData(listaDocumentosFiltrados, tipoDatos)
+                }
             }
-
         }else {
             Toast.makeText(this, "DEBE SELECCIONAR FECHA DE INICIO Y FINAL PARA FILTRAR.", Toast.LENGTH_SHORT).show()
         }

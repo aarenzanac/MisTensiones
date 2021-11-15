@@ -201,6 +201,8 @@
             android:id="@+id/imageButtonVolverGrafica"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:contentDescription="@string/botonvolver"
             app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
     </LinearLayout>

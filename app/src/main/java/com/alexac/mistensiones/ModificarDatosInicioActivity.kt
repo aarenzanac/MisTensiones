@@ -15,7 +15,7 @@ class ModificarDatosInicioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.modificar_datos_inicio_activity)
+        setContentView(R.layout.modificar_datos_inicio_activity_responsive)
 
         val bundle = intent.extras
         val email = bundle?.getString("email")

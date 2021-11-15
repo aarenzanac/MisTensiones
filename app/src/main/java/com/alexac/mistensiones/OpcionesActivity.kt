@@ -6,6 +6,12 @@ import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas.Co
 import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.opciones_activity.*
+import kotlinx.android.synthetic.main.opciones_activity.button_modificar_opciones
+import kotlinx.android.synthetic.main.opciones_activity.switchIMC
+import kotlinx.android.synthetic.main.opciones_activity.switchPush
+import kotlinx.android.synthetic.main.opciones_activity.switchTension
+import kotlinx.android.synthetic.main.opciones_activity.textViewNombreLogueadoOpciones
+import kotlinx.android.synthetic.main.opciones_activity_responsive.*
 
 class OpcionesActivity : AppCompatActivity() {
 
@@ -15,7 +21,7 @@ class OpcionesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.opciones_activity)
+        setContentView(R.layout.opciones_activity_responsive)
 
         val bundle = intent.extras
         val nombre = bundle?.getString("nombre")
