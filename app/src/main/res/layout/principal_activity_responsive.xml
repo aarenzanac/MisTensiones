@@ -484,29 +484,6 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/imageButtonSalir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/salir"
-                app:srcCompat="@mipmap/ic_exit_run_grey600_48dp" />
-
-            <ImageButton
-                android:id="@+id/imageButtonHistorial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/imagen_buscar_registro"
-                app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/linearLayout6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -529,6 +506,30 @@
                 app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonSalir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/salir"
+                app:srcCompat="@mipmap/ic_exit_run_grey600_48dp" />
+
+            <ImageButton
+                android:id="@+id/imageButtonHistorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_buscar_registro"
+                app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
