@@ -37,6 +37,7 @@
             android:theme="@style/SplashScreen">
         </activity>
         <activity android:name=".PrincipalActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreen">
         </activity>
