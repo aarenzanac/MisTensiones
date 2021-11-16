@@ -14,16 +14,16 @@
         android:layout_height="53dp"
         android:layout_gravity="center"
         android:contentDescription="@string/titulo"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_inicio"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/titulo" />
 
     <TextView
         android:id="@+id/text_view_inicio"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/editar_registros"
@@ -31,78 +31,83 @@
         android:textColor="#350D0D"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textViewNombreLogueadoPantallaModificacion"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/image_view_titulo"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textViewNombreLogueadoPantallaModificacion"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/nombrelogueado"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_inicio"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/layoutFechaHora"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNombreLogueadoPantallaModificacion"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="235dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/seleccione_fecha"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/editTextDateModificacion"
+            android:layout_width="146dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center_horizontal|center_vertical"
+            android:hint="@string/fecha"
+            android:importantForAutofill="no"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageViewFiltrar"
+            android:layout_width="123dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/botonfiltrar"
+            app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
+
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="match_parent"
-        android:layout_height="550dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout18"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNombreLogueadoPantallaModificacion"
         app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/layoutFechaHora"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="235dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/seleccione_fecha"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/editTextDateModificacion"
-                    android:layout_width="146dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/fecha"
-                    android:importantForAutofill="no"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/imageViewFiltrar"
-                    android:layout_width="123dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/botonfiltrar"
-                    app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout14"
@@ -113,7 +118,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/listaDatos"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     tools:listitem="@layout/datos_item" />
             </LinearLayout>
@@ -268,50 +273,40 @@
                     android:inputType="textMultiLine"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButtonEliminarRegistro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/string_boton_eliminar"
+                    app:srcCompat="@mipmap/ic_trash_can_outline_grey600_48dp" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonModificarRegistro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/imagen_modificar_registro"
+                    app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imageButtonVolver"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:contentDescription="@string/botonvolver"
+                app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/linearLayout18"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/imageButtonVolver"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-        <ImageButton
-            android:id="@+id/imageButtonEliminarRegistro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/string_boton_eliminar"
-            app:srcCompat="@mipmap/ic_trash_can_outline_grey600_48dp" />
-
-        <ImageButton
-            android:id="@+id/imageButtonModificarRegistro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/imagen_modificar_registro"
-            app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/imageButtonVolver"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/botonvolver"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
