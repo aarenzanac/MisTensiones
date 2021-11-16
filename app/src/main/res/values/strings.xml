@@ -65,4 +65,8 @@
     <string name="tensi_n">Tensión</string>
     <string name="tensiones_mmhg">Tensiones mmHg</string>
     <string name="notificaciones_push">Notificaciones Push</string>
+    <string name="ultima_entrada">ULTIMA ENTRADA</string>
+    <string name="hora1">Hora:</string>
+    <string name="imc">IMC</string>
+    <string name="imc1">imc</string>
 </resources>

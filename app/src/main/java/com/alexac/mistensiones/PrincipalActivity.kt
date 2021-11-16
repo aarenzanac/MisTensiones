@@ -37,7 +37,7 @@ class PrincipalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.principal_activity)
+        setContentView(R.layout.principal_activity_responsive)
         editTextDate.setInputType(InputType.TYPE_NULL);
         editTextTime.setInputType(InputType.TYPE_NULL);
         //var documento: DocumentoDatos = DocumentoDatos()
