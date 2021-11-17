@@ -301,6 +301,10 @@ class GraficaTension: AppCompatActivity(){
             }
         }
     }
+
+    private fun generarPDF(){
+
+    }
 }
 
 

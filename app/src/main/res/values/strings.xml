@@ -69,4 +69,5 @@
     <string name="hora1">Hora:</string>
     <string name="imc">IMC</string>
     <string name="imc1">imc</string>
+    <string name="informe">INFORME PDF</string>
 </resources>
