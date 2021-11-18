@@ -1,6 +1,8 @@
 package com.alexac.mistensiones.graficas
 
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -19,7 +21,17 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.grafica.*
+import kotlinx.android.synthetic.main.grafica.editTextDateGraficaFinal
+import kotlinx.android.synthetic.main.grafica.editTextDateGraficaInicio
+import kotlinx.android.synthetic.main.grafica.graficatension
+import kotlinx.android.synthetic.main.grafica.imageButtonVolverGrafica
+import kotlinx.android.synthetic.main.grafica.imageViewFiltrarGrafica
+import kotlinx.android.synthetic.main.grafica.radioButtonGlucosa
+import kotlinx.android.synthetic.main.grafica.radioButtonOxigeno
+import kotlinx.android.synthetic.main.grafica.radioButtonPeso
+import kotlinx.android.synthetic.main.grafica.radioButtonTensiones
+import kotlinx.android.synthetic.main.grafica.textViewNombreLogueadoGrafica
+import kotlinx.android.synthetic.main.graficaresponsive.*
 
 
 class GraficaTension: AppCompatActivity(){
@@ -36,6 +48,7 @@ class GraficaTension: AppCompatActivity(){
     var tipoDatos: String = ""
     var arrayFiltrado: ArrayList<DocumentoDatos> = arrayListOf()
     var arrayFecha = arrayListOf<String>()
+    private val STORAGE_CODE = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -120,6 +133,19 @@ class GraficaTension: AppCompatActivity(){
                 mostrarTodo(email, tipoDatos)
             }else{
                 filtrar(email, tipoDatos)
+            }
+        }
+
+        imageButtonPdf.setOnClickListener {
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+                if(checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    val permisos = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    requestPermissions(permisos, STORAGE_CODE)
+                }else{
+                    generarPDF()
+                }
+            }else{
+                generarPDF()
             }
         }
     }

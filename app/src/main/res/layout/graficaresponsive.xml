@@ -207,7 +207,7 @@
             app:srcCompat="@mipmap/ic_arrow_u_left_top_grey600_48dp" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/imageButtonPdf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
