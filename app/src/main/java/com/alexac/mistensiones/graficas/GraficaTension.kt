@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.text.InputType
 import android.util.Log
 import android.widget.Toast
@@ -21,6 +22,9 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
+import com.itextpdf.text.Document
+import com.itextpdf.text.Paragraph
+import com.itextpdf.text.pdf.PdfWriter
 import kotlinx.android.synthetic.main.grafica.editTextDateGraficaFinal
 import kotlinx.android.synthetic.main.grafica.editTextDateGraficaInicio
 import kotlinx.android.synthetic.main.grafica.graficatension
@@ -32,6 +36,12 @@ import kotlinx.android.synthetic.main.grafica.radioButtonPeso
 import kotlinx.android.synthetic.main.grafica.radioButtonTensiones
 import kotlinx.android.synthetic.main.grafica.textViewNombreLogueadoGrafica
 import kotlinx.android.synthetic.main.graficaresponsive.*
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class GraficaTension: AppCompatActivity(){
@@ -329,7 +339,36 @@ class GraficaTension: AppCompatActivity(){
     }
 
     private fun generarPDF(){
+        val documento = Document()
+        val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
+        val rutaArchivo = Environment.getExternalStorageDirectory().toString() + File.separator + nombreArchivo + ".pdf"
 
+        try {
+            PdfWriter.getInstance(documento, FileOutputStream(rutaArchivo))
+            documento.open()
+            val datosGuardar = "Hola.\n Este es un mensaje de prueba. \n Adios."
+            documento.addAuthor("Alejandro Arenzana Casis - DAM")
+            documento.add(Paragraph(datosGuardar))
+            documento.close()
+            Toast.makeText(this, "DOCUMENTO CON NOMBRE: " + nombreArchivo + ".pdf GENERADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+
+        }catch (e: Exception){
+            Toast.makeText(this, "ERROR GENERANDO ARCHIVO " + e.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            STORAGE_CODE -> {
+                if(grantResults.size >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    generarPDF()
+                }else{
+                    Toast.makeText(this, "PERMISO DENEGADO", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
     }
 }
 
