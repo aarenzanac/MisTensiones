@@ -341,15 +341,16 @@ class GraficaTension: AppCompatActivity(){
     }
 
     private fun generarPDF(){
-        val documento = Document(PageSize.A4)
-        val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
-        val rutaArchivo = Environment.getExternalStorageDirectory().toString() + File.separator + nombreArchivo + ".pdf"
+        //val documento = Document(PageSize.A4)
+        //val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
+        //val rutaArchivo = Environment.getExternalStorageDirectory().toString() + File.separator + nombreArchivo + ".pdf"
 
 
         try {
             PdfWriter.getInstance(documento, FileOutputStream(rutaArchivo))
-            documento.open()
-
+            var titulo: Bitmap = BitmapFactory.decodeResource(resources, R.mipmap.titulo)
+            var tituloEscalado = Bitmap.createScaledBitmap(titulo, 1200, 518, false)
+            documento.add(tituloEscalado)
             val datosGuardar = "Hola.\n Este es un mensaje de prueba. \n Adios."
             documento.addAuthor("Alejandro Arenzana Casis - DAM")
             documento.add(Paragraph(datosGuardar))
