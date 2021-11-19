@@ -1,14 +1,16 @@
 package com.alexac.mistensiones.graficas
 
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.os.Build
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Environment
 import android.text.InputType
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
@@ -22,8 +24,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
-import com.itextpdf.text.Document
-import com.itextpdf.text.Paragraph
+import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfWriter
 import kotlinx.android.synthetic.main.grafica.editTextDateGraficaFinal
 import kotlinx.android.synthetic.main.grafica.editTextDateGraficaInicio
@@ -38,10 +39,8 @@ import kotlinx.android.synthetic.main.grafica.textViewNombreLogueadoGrafica
 import kotlinx.android.synthetic.main.graficaresponsive.*
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class GraficaTension: AppCompatActivity(){
@@ -58,7 +57,7 @@ class GraficaTension: AppCompatActivity(){
     var tipoDatos: String = ""
     var arrayFiltrado: ArrayList<DocumentoDatos> = arrayListOf()
     var arrayFecha = arrayListOf<String>()
-    private val STORAGE_CODE = 1001
+    val permisos = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -147,16 +146,11 @@ class GraficaTension: AppCompatActivity(){
         }
 
         imageButtonPdf.setOnClickListener {
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-                if(checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                    val permisos = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    requestPermissions(permisos, STORAGE_CODE)
-                }else{
-                    generarPDF()
-                }
-            }else{
-                generarPDF()
+            //SOLICITA LOS PERMISOS SI NO LOS TIENE. SI LOS TIENE, CONTINUA SIN PEDIRLOS
+            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this, permisos, 121)
             }
+            generarPDF()
         }
     }
 
@@ -280,43 +274,51 @@ class GraficaTension: AppCompatActivity(){
         val lineDataSetSistolica = LineDataSet(entrySistolicas, "Sistólica nmmHg")
         lineDataSetSistolica.color = Color.RED
         lineDataSetSistolica.setDrawValues(true)
-        lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
+        lineDataSetSistolica.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val lineDataSetDiastolica = LineDataSet(entryDiastolicas, "Diastólica mmHg")
         lineDataSetSistolica.color = Color.BLUE
         lineDataSetSistolica.setDrawValues(true)
-        lineDataSetSistolica.setAxisDependency (YAxis.AxisDependency.LEFT)
+        lineDataSetSistolica.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val dataSets = arrayListOf(lineDataSetSistolica, lineDataSetDiastolica)
 
         val lineDataSetPeso = LineDataSet(entryPeso, "Peso Kg.")
         lineDataSetPeso.color = Color.BLUE
         lineDataSetPeso.setDrawValues(true)
-        lineDataSetPeso.setAxisDependency (YAxis.AxisDependency.LEFT)
+        lineDataSetPeso.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val lineDataSetOxigeno = LineDataSet(entryOxigenacion, "Oxigenación %")
         lineDataSetOxigeno.color = Color.BLUE
         lineDataSetOxigeno.setDrawValues(true)
-        lineDataSetOxigeno.setAxisDependency (YAxis.AxisDependency.LEFT)
+        lineDataSetOxigeno.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val lineDataSetGlucosa = LineDataSet(entryGlucemia, "Glucosa mg/dl")
         lineDataSetGlucosa.color = Color.BLUE
         lineDataSetGlucosa.setDrawValues(true)
-        lineDataSetGlucosa.setAxisDependency (YAxis.AxisDependency.LEFT)
+        lineDataSetGlucosa.setAxisDependency(YAxis.AxisDependency.LEFT)
 
 
         when(tipoDatos){
-            "tensiones" -> {val lineData = LineData(dataSets as List<ILineDataSet>?)
-                graficatension.data = lineData}
+            "tensiones" -> {
+                val lineData = LineData(dataSets as List<ILineDataSet>?)
+                graficatension.data = lineData
+            }
 
-            "peso" -> {val lineData = LineData(lineDataSetPeso)
-                graficatension.data = lineData}
+            "peso" -> {
+                val lineData = LineData(lineDataSetPeso)
+                graficatension.data = lineData
+            }
 
-            "oxigeno" -> {val lineData = LineData(lineDataSetOxigeno)
-                graficatension.data = lineData}
+            "oxigeno" -> {
+                val lineData = LineData(lineDataSetOxigeno)
+                graficatension.data = lineData
+            }
 
-            "glucosa" -> {val lineData = LineData(lineDataSetGlucosa)
-                graficatension.data = lineData}
+            "glucosa" -> {
+                val lineData = LineData(lineDataSetGlucosa)
+                graficatension.data = lineData
+            }
         }
 
         graficatension.setBackgroundColor(Color.WHITE)
@@ -339,13 +341,15 @@ class GraficaTension: AppCompatActivity(){
     }
 
     private fun generarPDF(){
-        val documento = Document()
+        val documento = Document(PageSize.A4)
         val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
         val rutaArchivo = Environment.getExternalStorageDirectory().toString() + File.separator + nombreArchivo + ".pdf"
+
 
         try {
             PdfWriter.getInstance(documento, FileOutputStream(rutaArchivo))
             documento.open()
+
             val datosGuardar = "Hola.\n Este es un mensaje de prueba. \n Adios."
             documento.addAuthor("Alejandro Arenzana Casis - DAM")
             documento.add(Paragraph(datosGuardar))
@@ -357,19 +361,6 @@ class GraficaTension: AppCompatActivity(){
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
-            STORAGE_CODE -> {
-                if(grantResults.size >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    generarPDF()
-                }else{
-                    Toast.makeText(this, "PERMISO DENEGADO", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-        }
-    }
 }
 
 
