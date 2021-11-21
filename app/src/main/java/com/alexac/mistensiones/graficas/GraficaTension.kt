@@ -1,8 +1,9 @@
 package com.alexac.mistensiones.graficas
 
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.os.Environment
 import android.text.InputType
@@ -10,7 +11,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
@@ -24,8 +24,6 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.firebase.firestore.FirebaseFirestore
-import com.itextpdf.text.*
-import com.itextpdf.text.pdf.PdfWriter
 import kotlinx.android.synthetic.main.grafica.editTextDateGraficaFinal
 import kotlinx.android.synthetic.main.grafica.editTextDateGraficaInicio
 import kotlinx.android.synthetic.main.grafica.graficatension
@@ -39,6 +37,7 @@ import kotlinx.android.synthetic.main.grafica.textViewNombreLogueadoGrafica
 import kotlinx.android.synthetic.main.graficaresponsive.*
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,6 +57,10 @@ class GraficaTension: AppCompatActivity(){
     var arrayFiltrado: ArrayList<DocumentoDatos> = arrayListOf()
     var arrayFecha = arrayListOf<String>()
     val permisos = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    lateinit var bitmap: Bitmap
+    lateinit var bitmapEscalado: Bitmap
+    val anchoPagina: Int = 1200
+    lateinit var listaDocumentoDatosOrdenada: ArrayList<DocumentoDatos>
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -66,6 +69,8 @@ class GraficaTension: AppCompatActivity(){
         editTextDateGraficaInicio.setInputType(InputType.TYPE_NULL);
         editTextDateGraficaFinal.setInputType(InputType.TYPE_NULL);
         listaDocumentoDatos = arrayListOf<DocumentoDatos>()
+        bitmap = BitmapFactory.decodeResource(resources, R.mipmap.titulo)
+        bitmapEscalado = Bitmap.createScaledBitmap(bitmap, 900, 250, false)
 
 
 
@@ -180,7 +185,7 @@ class GraficaTension: AppCompatActivity(){
                 Log.d("Registro", "${document.id} => ${document.data}")
             }*/
             listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
-            var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentoDatos)
+            listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentoDatos)
             Log.d("Registro", "EXTRACCION DE GRAFICA ACTIVITY ---- Numero de elementos: ${listaDocumentoDatos.size}")
             setLineChartData(listaDocumentoDatosOrdenada, tipoDatos)
         }
@@ -203,11 +208,11 @@ class GraficaTension: AppCompatActivity(){
                 }*/
                     listaDocumentoDatos = funcionesVarias.parsearDatos(documents)
                     listaDocumentosFiltrados = aplicarFiltroFechas(listaDocumentoDatos)
-                    var listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentosFiltrados)
+                    listaDocumentoDatosOrdenada = funcionesVarias.ordenarMenorAMayor(listaDocumentosFiltrados)
 
 
                     Log.d("Registro", "ARRAY DE DATOS PARA GRAFICA filtrados---- Numero de elementos: ${listaDocumentosFiltrados.size}")
-                    setLineChartData(listaDocumentosFiltrados, tipoDatos)
+                    setLineChartData(listaDocumentoDatosOrdenada, tipoDatos)
                 }
             }
         }else {
@@ -341,27 +346,95 @@ class GraficaTension: AppCompatActivity(){
     }
 
     private fun generarPDF(){
-        //val documento = Document(PageSize.A4)
-        //val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
-        //val rutaArchivo = Environment.getExternalStorageDirectory().toString() + File.separator + nombreArchivo + ".pdf"
+
+        val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
+        val contextWrapper: ContextWrapper = ContextWrapper(applicationContext)
+        val directorioDocumentos = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        val archivo: File = File (directorioDocumentos, nombreArchivo + ".pdf")
+
+        var docPdf: PdfDocument = PdfDocument()
+
+        //CREO LOS DATOS
+        val stringDatos: String = montarDatos(listaDocumentoDatosOrdenada)
 
 
-        try {
-            PdfWriter.getInstance(documento, FileOutputStream(rutaArchivo))
-            var titulo: Bitmap = BitmapFactory.decodeResource(resources, R.mipmap.titulo)
-            var tituloEscalado = Bitmap.createScaledBitmap(titulo, 1200, 518, false)
-            documento.add(tituloEscalado)
-            val datosGuardar = "Hola.\n Este es un mensaje de prueba. \n Adios."
-            documento.addAuthor("Alejandro Arenzana Casis - DAM")
-            documento.add(Paragraph(datosGuardar))
-            documento.close()
-            Toast.makeText(this, "DOCUMENTO CON NOMBRE: " + nombreArchivo + ".pdf GENERADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+        val lineasDatos: ArrayList<String> = arrayListOf<String>()
 
-        }catch (e: Exception){
-            Toast.makeText(this, "ERROR GENERANDO ARCHIVO " + e.toString(), Toast.LENGTH_SHORT).show()
+        var saltoLinea: Int = 0
+        var datosPorHoja: String = ""
+        for (line in stringDatos.split("\n")) {
+            datosPorHoja += line + "\n"
+            saltoLinea += 1
+            if(saltoLinea == 27){
+                lineasDatos.add(datosPorHoja)
+                datosPorHoja = ""
+            }
+        }
+        lineasDatos.add(datosPorHoja)
+
+        try{
+            docPdf = crearPagina(lineasDatos)
+
+            docPdf.writeTo(FileOutputStream(archivo.path, true))
+
+
+            docPdf.close()
+            Toast.makeText(this, "DOCUMENTO " + nombreArchivo.toString() + ".pdf " + "CREADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
+        }catch (e: IOException){
+            Toast.makeText(this, "ERROR CREANDO ARCHIVO. " + e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun montarDatos(listaDocumentoDatosOrdenada: ArrayList<DocumentoDatos>): String{
+        var datosMontados = ""
+        for(dato in listaDocumentoDatosOrdenada){
+            val diaDatos: String = "Fecha: " + dato.fecha + " - - - - Hora: " + dato.hora + "\nSistólica: " + dato.sistolica + " mmHg - - - - Diastólica: " + dato.diastolica + " mmHg\nGlucemia: " + dato.glucosa + " mg/dl - - - - Oxigenación: " + dato.oxigenacion + " % - - - - Peso: " + dato.peso + " Kg.\n"
+            datosMontados = datosMontados + diaDatos
+        }
+        //Log.d("Registro", datosMontados)
+
+        return datosMontados
+    }
+
+    private fun crearPagina(lineasDatos: ArrayList<String>): PdfDocument{
+        var numeroPagina: Int = 1
+        val documentoPdf: PdfDocument = PdfDocument()
+        val logo: Paint = Paint()    //PAINT DEL LOGOTIPO
+        val titulo: Paint = Paint()  //PAINT DEL TÍTULO
+        val datos: Paint = Paint()   //PAINT DE LOS DATOS
+
+        val margenIzquierdo: Float = 20F
+        var margenSuperior: Float = 380F
+
+
+        for(hojaDatos in lineasDatos){
+            val miPaginaInfo: PdfDocument.PageInfo = PdfDocument.PageInfo.Builder(1200, 2010, numeroPagina).create()
+            var miPagina: PdfDocument.Page = documentoPdf.startPage(miPaginaInfo)
+            val canvas: Canvas = miPagina.canvas
+            //PINTO EL LOGOTIPO
+            canvas.drawBitmap(bitmapEscalado, 150F, 0F, logo)
+            //PINTO Y FORMATEO EL TÍTULO
+            titulo.textAlign = Paint.Align.CENTER
+            titulo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
+            titulo.textSize = 70F
+            canvas.drawText("INFORME PDF -- Pag: " + numeroPagina, anchoPagina/2F, 300F, titulo)
+            //PINTO Y FORMATEO LOS DATOS
+            datos.textAlign = Paint.Align.LEFT
+            datos.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
+            datos.textSize = 35F
+
+            for (line in hojaDatos.split("\n")) {
+                //Log.d("Registro", line)
+                canvas.drawText(line, margenIzquierdo, margenSuperior, datos);
+                margenSuperior += 60F
+            }
+            documentoPdf.finishPage(miPagina)
+            numeroPagina += 1
+
+        }
+
+        return documentoPdf
+    }
 }
 
 

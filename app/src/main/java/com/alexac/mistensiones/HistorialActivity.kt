@@ -76,7 +76,9 @@ class HistorialActivity : AppCompatActivity(), DatosAdapter.OnDocumentoDatosClic
         imageButtonGraficas.setOnClickListener {
             val pantallaGraficaIntent = Intent(this, GraficaTension::class.java).apply {
                 putExtra("email", email)
+
             }
+
             startActivity(pantallaGraficaIntent)
         }
 
