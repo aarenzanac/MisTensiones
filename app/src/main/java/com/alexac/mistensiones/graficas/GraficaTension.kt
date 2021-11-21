@@ -279,27 +279,32 @@ class GraficaTension: AppCompatActivity(){
         val lineDataSetSistolica = LineDataSet(entrySistolicas, "Sistólica nmmHg")
         lineDataSetSistolica.color = Color.RED
         lineDataSetSistolica.setDrawValues(true)
+        lineDataSetSistolica.valueTextSize = 8F
         lineDataSetSistolica.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val lineDataSetDiastolica = LineDataSet(entryDiastolicas, "Diastólica mmHg")
-        lineDataSetSistolica.color = Color.BLUE
-        lineDataSetSistolica.setDrawValues(true)
-        lineDataSetSistolica.setAxisDependency(YAxis.AxisDependency.LEFT)
+        lineDataSetDiastolica.color = Color.BLUE
+        lineDataSetDiastolica.valueTextSize = 8F
+        lineDataSetDiastolica.setDrawValues(true)
+        lineDataSetDiastolica.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val dataSets = arrayListOf(lineDataSetSistolica, lineDataSetDiastolica)
 
         val lineDataSetPeso = LineDataSet(entryPeso, "Peso Kg.")
         lineDataSetPeso.color = Color.BLUE
+        lineDataSetPeso.valueTextSize = 8F
         lineDataSetPeso.setDrawValues(true)
         lineDataSetPeso.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val lineDataSetOxigeno = LineDataSet(entryOxigenacion, "Oxigenación %")
         lineDataSetOxigeno.color = Color.BLUE
+        lineDataSetOxigeno.valueTextSize = 8F
         lineDataSetOxigeno.setDrawValues(true)
         lineDataSetOxigeno.setAxisDependency(YAxis.AxisDependency.LEFT)
 
         val lineDataSetGlucosa = LineDataSet(entryGlucemia, "Glucosa mg/dl")
         lineDataSetGlucosa.color = Color.BLUE
+        lineDataSetGlucosa.valueTextSize = 8F
         lineDataSetGlucosa.setDrawValues(true)
         lineDataSetGlucosa.setAxisDependency(YAxis.AxisDependency.LEFT)
 
@@ -365,7 +370,7 @@ class GraficaTension: AppCompatActivity(){
         for (line in stringDatos.split("\n")) {
             datosPorHoja += line + "\n"
             saltoLinea += 1
-            if(saltoLinea == 27){
+            if(saltoLinea == 18){
                 lineasDatos.add(datosPorHoja)
                 datosPorHoja = ""
             }
@@ -374,10 +379,7 @@ class GraficaTension: AppCompatActivity(){
 
         try{
             docPdf = crearPagina(lineasDatos)
-
             docPdf.writeTo(FileOutputStream(archivo.path, true))
-
-
             docPdf.close()
             Toast.makeText(this, "DOCUMENTO " + nombreArchivo.toString() + ".pdf " + "CREADO CON ÉXITO.", Toast.LENGTH_SHORT).show()
         }catch (e: IOException){
@@ -402,8 +404,9 @@ class GraficaTension: AppCompatActivity(){
         val logo: Paint = Paint()    //PAINT DEL LOGOTIPO
         val titulo: Paint = Paint()  //PAINT DEL TÍTULO
         val datos: Paint = Paint()   //PAINT DE LOS DATOS
+        val lineaSeparadora: Paint = Paint()   //PAINT DE LA LINEA SEPARADORA
 
-        val margenIzquierdo: Float = 20F
+        val margenIzquierdo: Float = 40F
         var margenSuperior: Float = 380F
 
 
@@ -417,22 +420,27 @@ class GraficaTension: AppCompatActivity(){
             titulo.textAlign = Paint.Align.CENTER
             titulo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
             titulo.textSize = 70F
-            canvas.drawText("INFORME PDF -- Pag: " + numeroPagina, anchoPagina/2F, 300F, titulo)
+            canvas.drawText("INFORME PDF -- Pag: " + numeroPagina + "/" + lineasDatos.size, anchoPagina/2F, 300F, titulo)
             //PINTO Y FORMATEO LOS DATOS
             datos.textAlign = Paint.Align.LEFT
             datos.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
             datos.textSize = 35F
 
+            var contadorSeparador: Int = 0
             for (line in hojaDatos.split("\n")) {
-                //Log.d("Registro", line)
+                contadorSeparador += 1
                 canvas.drawText(line, margenIzquierdo, margenSuperior, datos);
                 margenSuperior += 60F
+                if(contadorSeparador == 3){
+                    canvas.drawLine(20F, margenSuperior, 1100F, margenSuperior, lineaSeparadora)
+                    margenSuperior += 70F
+                    contadorSeparador = 0
+                }
             }
             documentoPdf.finishPage(miPagina)
             numeroPagina += 1
-
+            margenSuperior = 380F
         }
-
         return documentoPdf
     }
 }
