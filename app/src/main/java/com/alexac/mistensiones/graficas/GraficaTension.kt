@@ -1,5 +1,6 @@
 package com.alexac.mistensiones.graficas
 
+import android.Manifest
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.graphics.*
@@ -11,6 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.alexac.mistensiones.R
 import com.alexac.mistensiones.fecha_hora.DatePickerFragment
 import com.alexac.mistensiones.funciones_varias.FuncionesVarias
@@ -152,10 +154,36 @@ class GraficaTension: AppCompatActivity(){
 
         imageButtonPdf.setOnClickListener {
             //SOLICITA LOS PERMISOS SI NO LOS TIENE. SI LOS TIENE, CONTINUA SIN PEDIRLOS
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this, permisos, 121)
+
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                //PERMISO NO ACEPTADO POR EL MOMENTO
+                requestStoragePermission()
+            }else{
+                //PERMISOS ACEPTADOS Y CREO EL PDF
+                generarPDF()
             }
-            generarPDF()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == 777){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                generarPDF()
+            }else{
+                //PERMISO NO ACEPTADO
+                Toast.makeText(this, "PERMISOS RECHAZADOS POR PRIMERA VEZ.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun requestStoragePermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            //EL USUARIO HA RECHAZADO LOS PERMISOS Y DEBERÁ AUTORIZARLOS DESDE LA CONFIGURACION DEL MÓVIL
+            Toast.makeText(this, "EL PERMISO HA SIDO RECHAZADO.", Toast.LENGTH_SHORT).show()
+        }else{
+            //PEDIMOS EL PERMISO
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 777)
         }
     }
 
@@ -355,8 +383,8 @@ class GraficaTension: AppCompatActivity(){
         val nombreArchivo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
         val contextWrapper: ContextWrapper = ContextWrapper(applicationContext)
         val directorioDocumentos = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-        val archivo: File = File (directorioDocumentos, nombreArchivo + ".pdf")
 
+        val archivo: File = File (directorioDocumentos, nombreArchivo + ".pdf")
         var docPdf: PdfDocument = PdfDocument()
 
         //CREO LOS DATOS
