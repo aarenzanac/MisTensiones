@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas.Companion.preferenciasCompartidas
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.login_activity.*
 
 
@@ -42,15 +44,19 @@ class LoginActivity : AppCompatActivity() {
             if (edit_text_email.text.isNotEmpty() && edit_text_password.text.isNotEmpty()){
 
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(edit_text_email.text.toString(), edit_text_password.text.toString()).addOnCompleteListener{
-
-                    if(it.isSuccessful){
+                val user = Firebase.auth.currentUser
+                if(it.isSuccessful){
+                    if(user!!.isEmailVerified) {
                         Toast.makeText(this, "ACCESO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
                         preferenciasCompartidas.guardarPreferenciaEmail(edit_text_email.text.toString())
                         preferenciasCompartidas.guardarPreferenciaPwd(edit_text_password.text.toString())
                         goPrincipalActivity(edit_text_email.text.toString(), edit_text_password.text.toString())
                     }else{
-                        mostrarError(it.exception.toString())
+                        Toast.makeText(this, "ASEGÚRESE DE VERIFICAR SU MAIL ANTES DE ENTRAR.",Toast.LENGTH_SHORT).show()
                     }
+                }else{
+                    mostrarError(it.exception.toString())
+                }
                 }
             }
         }

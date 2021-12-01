@@ -1,11 +1,19 @@
 package com.alexac.mistensiones
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.registro_activity.*
+import kotlinx.android.synthetic.main.registro_activity.button_modificar_datos
+import kotlinx.android.synthetic.main.registro_activity.edit_text_email_registro
+import kotlinx.android.synthetic.main.registro_activity.edit_text_password_registro
+import kotlinx.android.synthetic.main.registro_activity_responsive.*
 
 class RegistroActivity : AppCompatActivity() {
 
@@ -20,20 +28,32 @@ class RegistroActivity : AppCompatActivity() {
 
 
     private fun setup(){
-        button_modificar_datos.setOnClickListener {
+        button_registro.setOnClickListener {
             if (edit_text_email_registro.text.isNotEmpty() && edit_text_password_registro.text.isNotEmpty()){
 
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(edit_text_email_registro.text.toString(), edit_text_password_registro.text.toString()).addOnCompleteListener{
+                    val user = Firebase.auth.currentUser
 
                     if(it.isSuccessful){
-                        Toast.makeText(this, "REGISTRO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
-                        goDatosInicioActivity(edit_text_email_registro.text.toString(), edit_text_password_registro.text.toString())
+                        //Toast.makeText(this, "REGISTRO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
+                        enviarMailRegistro(this, user)
+                        goLoginActivity()
                     }else{
                         mostrarError(it.exception.toString())
                     }
                 }
             }
         }
+    }
+
+    private fun enviarMailRegistro(context: Context, user:  FirebaseUser?){
+        val user = Firebase.auth.currentUser
+        user!!.sendEmailVerification().addOnCompleteListener(){enviadoCorreo ->
+            if(enviadoCorreo.isSuccessful){
+                Toast.makeText(context, "CORREO ENVIADO CON ÉXITO. VERIFIQUE SU DIRECCIÓN DE CORREO A TRAVÉS DE SU EMAIL.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 
@@ -47,6 +67,12 @@ class RegistroActivity : AppCompatActivity() {
         startActivity(datosInicioIntent)
     }
 
+    private fun goLoginActivity(){
+        val datosInicioIntent = Intent(this, LoginActivity::class.java).apply {
+        }
+
+        startActivity(datosInicioIntent)
+    }
     //FUNCIÓN PARA HACER MAS AMIGABLE EL ERROR DEVUELTO EN EL REGISTRO POR FIREBASE
     private fun mostrarError(exception: String){
         when(exception) {
