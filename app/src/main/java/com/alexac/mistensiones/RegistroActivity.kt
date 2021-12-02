@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.datos_inicio_activity.*
 import kotlinx.android.synthetic.main.registro_activity.*
 import kotlinx.android.synthetic.main.registro_activity.button_modificar_datos
 import kotlinx.android.synthetic.main.registro_activity.edit_text_email_registro
@@ -16,7 +18,7 @@ import kotlinx.android.synthetic.main.registro_activity.edit_text_password_regis
 import kotlinx.android.synthetic.main.registro_activity_responsive.*
 
 class RegistroActivity : AppCompatActivity() {
-
+    private val database = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,6 +39,13 @@ class RegistroActivity : AppCompatActivity() {
                     if(it.isSuccessful){
                         //Toast.makeText(this, "REGISTRO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
                         enviarMailRegistro(this, user)
+                        database.collection("usuariosRegistrados").document(edit_text_email_registro.text.toString()).set(
+                                hashMapOf("email" to edit_text_email_registro.text.toString(),
+                                        "nombre" to "Nuevo",
+                                        "edad" to "",
+                                        "altura" to ""
+                                )
+                        )
                         goLoginActivity()
                     }else{
                         mostrarError(it.exception.toString())

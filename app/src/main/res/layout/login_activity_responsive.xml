@@ -113,4 +113,18 @@
         app:layout_constraintTop_toBottomOf="@+id/text_view_notienecuenta"
         app:layout_constraintVertical_bias="0.0" />
 
+    <TextView
+        android:id="@+id/text_view_olvido_contraseña"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/olvid_su_contrase_a_rellene_su_mail_y_p_lseme"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_registrese"
+        app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
