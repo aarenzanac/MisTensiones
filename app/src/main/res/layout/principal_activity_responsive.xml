@@ -86,7 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idNombreLogeado"
-        app:layout_constraintVertical_bias="0.49">
+        app:layout_constraintVertical_bias="0.00999999">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -470,62 +470,65 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/imageButtonInsertarRegistro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/imagen_a_adir_registro"
-                        app:srcCompat="@mipmap/ic_text_box_plus_outline_grey600_48dp" />
-
-                    <ImageButton
-                        android:id="@+id/imageButtonModificar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/imagen_modificar_registro"
-                        app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/imageButtonSalir"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/salir"
-                        app:srcCompat="@mipmap/ic_exit_run_grey600_48dp" />
-
-                    <ImageButton
-                        android:id="@+id/imageButtonHistorial"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/imagen_buscar_registro"
-                        app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonInsertarRegistro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_a_adir_registro"
+                app:srcCompat="@mipmap/ic_text_box_plus_outline_grey600_48dp" />
+
+            <ImageButton
+                android:id="@+id/imageButtonModificar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_modificar_registro"
+                app:srcCompat="@mipmap/ic_lead_pencil_grey600_48dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonSalir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/salir"
+                app:srcCompat="@mipmap/ic_exit_run_grey600_48dp" />
+
+            <ImageButton
+                android:id="@+id/imageButtonHistorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/imagen_buscar_registro"
+                app:srcCompat="@mipmap/ic_text_box_search_outline_grey600_48dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
