@@ -2,25 +2,21 @@ package com.alexac.mistensiones
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import com.alexac.mistensiones.funciones_varias.CargarPreferenciasCompartidas.Companion.preferenciasCompartidas
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.login_activity.*
 import kotlinx.android.synthetic.main.login_activity.button_acceder
 import kotlinx.android.synthetic.main.login_activity.edit_text_email
 import kotlinx.android.synthetic.main.login_activity.edit_text_password
 import kotlinx.android.synthetic.main.login_activity.login_layout
 import kotlinx.android.synthetic.main.login_activity.text_view_registrese
 import kotlinx.android.synthetic.main.login_activity_responsive.*
-import kotlinx.android.synthetic.main.principal_activity.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -71,6 +67,8 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.makeText(this, nombreLogueado + " pruebaNombre", Toast.LENGTH_SHORT).show()
                                 if(nombreLogueado == "Nuevo"){
                                     goDatosInicioActivity(edit_text_email.text.toString())
+                                    preferenciasCompartidas.guardarPreferenciaEmail(edit_text_email.text.toString())
+                                    preferenciasCompartidas.guardarPreferenciaPwd(edit_text_password.text.toString())
                                 }else{
                                     preferenciasCompartidas.guardarPreferenciaEmail(edit_text_email.text.toString())
                                     preferenciasCompartidas.guardarPreferenciaPwd(edit_text_password.text.toString())
