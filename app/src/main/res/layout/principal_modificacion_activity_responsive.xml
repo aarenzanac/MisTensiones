@@ -10,16 +10,16 @@
 
     <ImageView
         android:id="@+id/image_view_titulo"
-        android:layout_width="269dp"
+        android:layout_width="0dp"
         android:layout_height="53dp"
         android:layout_gravity="center"
         android:contentDescription="@string/titulo"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_inicio"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.577"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/titulo" />
 
     <TextView
@@ -32,9 +32,9 @@
         android:textColor="#350D0D"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textViewNombreLogueadoPantallaModificacion"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.88" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_titulo"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textViewNombreLogueadoPantallaModificacion"
@@ -43,22 +43,22 @@
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/nombrelogueado"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/layoutFechaHora"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_inicio"
+        app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
         android:id="@+id/layoutFechaHora"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout14"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/textViewNombreLogueadoPantallaModificacion"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/textView"
@@ -92,25 +92,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout14"
-        android:layout_width="match_parent"
-        android:layout_height="275dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listaDatos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            tools:listitem="@layout/datos_item" />
-    </LinearLayout>
-
     <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="0dp"
@@ -118,13 +99,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutFechaHora"
         app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linearLayout14"
+                android:layout_width="match_parent"
+                android:layout_height="275dp"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listaDatos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    tools:listitem="@layout/datos_item" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout11"
