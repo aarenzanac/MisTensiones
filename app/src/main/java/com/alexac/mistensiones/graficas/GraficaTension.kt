@@ -401,6 +401,7 @@ class GraficaTension: AppCompatActivity(){
             if(saltoLinea == 18){
                 lineasDatos.add(datosPorHoja)
                 datosPorHoja = ""
+                saltoLinea = 0
             }
         }
         lineasDatos.add(datosPorHoja)

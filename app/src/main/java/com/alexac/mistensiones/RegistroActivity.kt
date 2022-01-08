@@ -10,9 +10,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.datos_inicio_activity.*
-import kotlinx.android.synthetic.main.registro_activity.*
-import kotlinx.android.synthetic.main.registro_activity.button_modificar_datos
 import kotlinx.android.synthetic.main.registro_activity.edit_text_email_registro
 import kotlinx.android.synthetic.main.registro_activity.edit_text_password_registro
 import kotlinx.android.synthetic.main.registro_activity_responsive.*
@@ -67,6 +64,7 @@ class RegistroActivity : AppCompatActivity() {
 
 
     //BOTON PARA ACCEDER A LA PANTALLA DE INICIO
+    //NO USADO PUESTO QUE SE CREÓ EN UNA VERSIÓN ANTERIOR EN LA QUE DESDE ESTA PANTALLA NAVEGABAS A LA DE DATOS DE INICIO. AHORA ES DESDE LA DE LOGIN EN CASO DE SER EL PRIMER ACCESO.
     private fun goDatosInicioActivity(email: String, password: String){
         val datosInicioIntent = Intent(this, DatosInicioActivity::class.java).apply {
             putExtra("email", email)

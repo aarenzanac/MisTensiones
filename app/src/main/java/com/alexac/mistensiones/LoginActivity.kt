@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(this, "ACCESO REALIZADO CON ÉXITO", Toast.LENGTH_SHORT).show()
                             database.collection("usuariosRegistrados").document(edit_text_email.text.toString()).get().addOnSuccessListener{
                                 nombreLogueado = (it.get("nombre") as String)
-                                Toast.makeText(this, nombreLogueado + " pruebaNombre", Toast.LENGTH_SHORT).show()
+                                //Toast.makeText(this, nombreLogueado + " pruebaNombre", Toast.LENGTH_SHORT).show()
                                 if(nombreLogueado == "Nuevo"){
                                     goDatosInicioActivity(edit_text_email.text.toString())
                                     preferenciasCompartidas.guardarPreferenciaEmail(edit_text_email.text.toString())
